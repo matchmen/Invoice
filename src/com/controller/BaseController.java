@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 
 import com.constant.Constants;
+import com.exception.BusinessException;
 import com.exception.ParameterException;
 import com.exception.SystemException;
 
@@ -44,8 +45,8 @@ public class BaseController {
 		map.setAttribute(ex.getObjStr(), ex.getObject());
 		return pageName;
 	}
-	@ExceptionHandler(value=ParameterException.class)
-	public String paramaterException(ParameterException ex,HttpServletRequest map){
+	@ExceptionHandler(value=BusinessException.class)
+	public String paramaterException(BusinessException ex,HttpServletRequest map){
 		String pageName = ex.getPageName();
 		map.setAttribute("errorMsg", ex.getMessage());
 		map.setAttribute(ex.getObjStr(), ex.getObject());

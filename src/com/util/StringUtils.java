@@ -31,7 +31,7 @@ public class StringUtils {
 	 * @param args
 	 */
 	public static boolean isLetter(String str){
-		return null!=str && str.matches("[a-zA_Z]+");
+		return null!=str && str.matches("[a-zA-Z]+");
 	}
 	
 	/**

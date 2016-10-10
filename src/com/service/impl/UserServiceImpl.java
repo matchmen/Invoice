@@ -2,7 +2,7 @@ package com.service.impl;
 
 import com.service.UserService;
 
-import exception.BusinessException;
+import com.exception.BusinessException;
 
 public class UserServiceImpl implements UserService{
 

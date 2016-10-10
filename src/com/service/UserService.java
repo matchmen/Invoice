@@ -1,6 +1,6 @@
 package com.service;
 
-import exception.BusinessException;
+import com.exception.BusinessException;
 
 public interface UserService {
 

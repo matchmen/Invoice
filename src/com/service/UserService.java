@@ -1,9 +1,9 @@
 package com.service;
 
-import com.exception.BusinessException;
+import com.exception.ParameterException;
 
 public interface UserService {
 
-	public String login() throws BusinessException;
+	public String login() throws ParameterException;
 	
 }

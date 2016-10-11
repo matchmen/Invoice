@@ -37,18 +37,18 @@ public class BaseController {
 		return page;
 	}
 	
-	@ExceptionHandler(value=ParameterException.class)
-	public String businessException(ParameterException ex,HttpServletRequest map){
+	@ExceptionHandler(value=BusinessException.class)
+	public String businessException(BusinessException ex,HttpServletRequest map){
 		String pageName = ex.getPageName();
-		map.setAttribute("errorElementId", ex.getElementId());
 		map.setAttribute("errorMsg", ex.getMessage());
 		map.setAttribute(ex.getObjStr(), ex.getObject());
 		return pageName;
 	}
-	@ExceptionHandler(value=BusinessException.class)
-	public String paramaterException(BusinessException ex,HttpServletRequest map){
+	@ExceptionHandler(value=ParameterException.class)
+	public String paramaterException(ParameterException ex,HttpServletRequest map){
 		String pageName = ex.getPageName();
 		map.setAttribute("errorMsg", ex.getMessage());
+		map.setAttribute("errorElementId", ex.getElementId());
 		map.setAttribute(ex.getObjStr(), ex.getObject());
 		return pageName;
 	}

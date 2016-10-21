@@ -1,9 +1,14 @@
 package com.util;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import com.exception.SystemException;
+
 public class StringUtils {
 	
 	/**
-	 * ¿Õ×Ö·û´®ÅĞ¶Ï
+	 * ä¸ºç©ºåˆ¤æ–­
 	 * @param str
 	 * @return
 	 */
@@ -12,13 +17,13 @@ public class StringUtils {
 		return str.length()==0;
 	}
 	/**
-	 * ¿Õ°××Ö·û´®ÅĞ¶Ï
+	 * ä¸ºç©ºä¸²åˆ¤æ–­
 	 */
 	public static boolean isBlank(String str){
-		return str.trim().length()==0;
+		return null!=str && str.trim().length()==0;
 	}
 	/**
-	 * Êı×ÖÅĞ¶Ï
+	 * æ•°å­—åˆ¤æ–­
 	 * @param str
 	 * @return
 	 */
@@ -27,7 +32,7 @@ public class StringUtils {
 	}
 	
 	/**
-	 * ×ÖÄ¸ÅĞ¶Ï
+	 * å­—æ¯åˆ¤æ–­
 	 * @param args
 	 */
 	public static boolean isLetter(String str){
@@ -35,16 +40,34 @@ public class StringUtils {
 	}
 	
 	/**
-	 * ÓÊÏä¸ñÊ½ÅĞ¶Ï
+	 * é‚®ç®±æ ¼å¼åˆ¤æ–­
 	 * @param args
 	 */
 	public static boolean isEmail(String str){
 		return null!=str && str.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$");
 	}
 	/**
-	 * ÈÕÆÚ¸ñÊ½ÅĞ¶Ï
+	 * æ—¥æœŸæ ¼å¼åˆ¤æ–­
 	 */
 	public static boolean isDate(String str){
 		return null!=str && str.matches("[\\d]{4}\\/(([0][1-9])|([1][0-2]))\\/(([0][1-9])|([1|2][0-9])|[3][0|1])");
+	}
+	/**
+	 * MD5åŠ å¯†ç”¨æˆ·å£ä»¤
+	 * @throws SystemException 
+	 */
+	public static String md5Password(String str) throws SystemException{
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+			messageDigest.update(str.getBytes());
+			byte [] tmp=messageDigest.digest();
+			StringBuffer sb = new StringBuffer();
+			for (byte b : tmp) {
+				sb.append(Integer.toHexString(b&0xff));
+			}
+			return sb.toString();
+		} catch (NoSuchAlgorithmException e) {
+			throw new SystemException("errorPage","ç”¨æˆ·å£ä»¤åŠ å¯†å¼‚å¸¸");
+		}
 	}
 }

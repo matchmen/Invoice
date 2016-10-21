@@ -32,24 +32,36 @@ public class BaseController {
 	
 	@ExceptionHandler(value=SystemException.class)
 	public String systemException(SystemException ex,HttpServletRequest map){
-		String page = ex.getPageName();
-		map.setAttribute("errorMsg", ex.getMessage());
-		return page;
+		String pageName ="error";
+		if(null!=ex.getPageName())
+			pageName = ex.getPageName();
+		if(null!=ex.getMessage())
+			map.setAttribute("errorMsg", ex.getMessage());
+		return pageName;
 	}
 	
 	@ExceptionHandler(value=BusinessException.class)
 	public String businessException(BusinessException ex,HttpServletRequest map){
-		String pageName = ex.getPageName();
-		map.setAttribute("errorMsg", ex.getMessage());
-		map.setAttribute(ex.getObjStr(), ex.getObject());
+		String pageName ="error";
+		if(null!=ex.getPageName())
+			pageName = ex.getPageName();
+		if(null!=ex.getMessage())
+			map.setAttribute("errorMsg", ex.getMessage());
+		if(null!=ex.getObjStr()&&null!=ex.getObject())
+			map.setAttribute(ex.getObjStr(), ex.getObject());
 		return pageName;
 	}
 	@ExceptionHandler(value=ParameterException.class)
 	public String paramaterException(ParameterException ex,HttpServletRequest map){
-		String pageName = ex.getPageName();
-		map.setAttribute("errorMsg", ex.getMessage());
-		map.setAttribute("errorElementId", ex.getElementId());
-		map.setAttribute(ex.getObjStr(), ex.getObject());
+		String pageName ="error";
+		if(null!=ex.getPageName())
+			pageName = ex.getPageName();
+		if(null!=ex.getErrorMsg())
+			map.setAttribute("errorMsg", ex.getErrorMsg());
+		if(null!=ex.getElementId())
+			map.setAttribute("errorElementId", ex.getElementId());
+		if(null!=ex.getObjStr()&&null!=ex.getObject())
+			map.setAttribute(ex.getObjStr(), ex.getObject());
 		return pageName;
 	}
 }

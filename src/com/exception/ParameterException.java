@@ -4,33 +4,28 @@ public class ParameterException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 页面名	
+	 * 椤甸潰鍚嶇О
 	 */
 	private String pageName;
 	/**
-	 * 元素ID
+	 * 椤甸潰鍏冪礌ID
 	 */
 	private String elementId;
 	/**
-	 * 出错信息
+	 * 鍑洪敊淇℃伅
 	 */
 	private String errorMsg;
 	/**
-	 * 传递对象
+	 * Object1
 	 */
 	private Object object;
 	/**
-	 * 页面对象名
+	 * Object1  str
 	 */
 	private String objStr;
-	
-	public ParameterException(String pageName, String elementId,
-			String errorMsg, Object object, String objStr) {
-		this.pageName = pageName;
-		this.elementId = elementId;
-		this.errorMsg = errorMsg;
-		this.object = object;
-		this.objStr = objStr;
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	public String getElementId() {
@@ -39,22 +34,6 @@ public class ParameterException extends Exception {
 
 	public void setElementId(String elementId) {
 		this.elementId = elementId;
-	}
-
-	public Object getObject() {
-		return object;
-	}
-
-	public void setObject(Object object) {
-		this.object = object;
-	}
-
-	public String getObjStr() {
-		return objStr;
-	}
-
-	public void setObjStr(String objStr) {
-		this.objStr = objStr;
 	}
 
 	public String getErrorMsg() {
@@ -93,4 +72,30 @@ public class ParameterException extends Exception {
 	public ParameterException(Throwable arg0) {
 		super(arg0);
 	}
+
+	public Object getObject() {
+		return object;
+	}
+
+	public void setObject(Object object) {
+		this.object = object;
+	}
+
+	public String getObjStr() {
+		return objStr;
+	}
+
+	public void setObjStr(String objStr) {
+		this.objStr = objStr;
+	}
+
+	public ParameterException(String pageName, String elementId,
+			String errorMsg, Object object, String objStr) {
+		this.pageName = pageName;
+		this.elementId = elementId;
+		this.errorMsg = errorMsg;
+		this.object = object;
+		this.objStr = objStr;
+	}
+	
 }

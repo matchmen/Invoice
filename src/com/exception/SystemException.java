@@ -7,6 +7,11 @@ public class SystemException extends Exception{
 	private String pageName;
 	
 	private String errormsg;
+	
+	public SystemException(String pageName, String errormsg) {
+		this.pageName = pageName;
+		this.errormsg = errormsg;
+	}
 
 	public String getPageName() {
 		return pageName;

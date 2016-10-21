@@ -2,19 +2,19 @@ package com.model;
 
 public class Constant {
 	/**
-	 * »­ÃæÃû³Æ
+	 * é¡µé¢åç§°
 	 */
 	private String pageName;
 	/**
-	 * ³£Á¿Ãû
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String constantName;
 	/**
-	 * ³£Á¿Öµ
+	 * ï¿½ï¿½ï¿½ï¿½Öµ
 	 */
 	private String constantValue;
 	/**
-	 * Ë³Ğò
+	 * Ë³ï¿½ï¿½
 	 */
 	private int index;
 	public String getPageName() {

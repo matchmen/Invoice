@@ -4,18 +4,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="css/invoice.css" rel="stylesheet" type="text/css" >
-<script type="text/javascript">
-function errSetting(){
-	var errorElementId = document.getElementById("errorMsg").value;
-	document.getElementById(errorElementId).setAttribute('class','error');
-}
-</script>
-<style>
-    .error{
-        border-color: red;
-    }
-</style>
+<link href="WebContent/css/invoice.css" rel="stylesheet" type="text/css" >
+<script type="text/javascript" src="WebContent/js/invoice.js"></script>
 <title>注 册</title>
 </head>
 <body onload="errSetting()">

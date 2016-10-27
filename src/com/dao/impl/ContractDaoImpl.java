@@ -5,11 +5,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import com.dao.ContractDao;
 import com.dao.DaoJdbcTemplate;
 import com.model.Contract;
-
+import com.util.DateUtils;
+@Repository("contractDao")
 public class ContractDaoImpl extends DaoJdbcTemplate implements ContractDao {
 
 	@Override
@@ -39,7 +41,7 @@ public class ContractDaoImpl extends DaoJdbcTemplate implements ContractDao {
 			.append("','")
 			.append(contract.getContractType())
 			.append("','")
-			.append(contract.getContactNameOfFirst())
+			.append(contract.getCompanyNameOfFirst())
 			.append("','")
 			.append(contract.getContactNameOfFirst())
 			.append("','")
@@ -51,7 +53,7 @@ public class ContractDaoImpl extends DaoJdbcTemplate implements ContractDao {
 			.append("','")
 			.append(contract.getContactNameOfThird())
 			.append("','")
-			.append(contract.getSales())
+			.append(contract.getContactNameOfSecond())
 			.append("','")
 			.append(contract.getItemName())
 			.append("','")
@@ -115,7 +117,7 @@ public class ContractDaoImpl extends DaoJdbcTemplate implements ContractDao {
 			contract.getContactNameOfSecond(),
 			contract.getCompanyNameOfThird(),
 			contract.getContactNameOfThird(),
-			contract.getSales(),
+			contract.getContactNameOfSecond(),
 			contract.getItemName(),
 			contract.getContractSignDate(),
 			contract.getContractStartDate(),
@@ -139,6 +141,7 @@ public class ContractDaoImpl extends DaoJdbcTemplate implements ContractDao {
 			public Contract mapRow(ResultSet rs, int arg1)
 					throws SQLException {
 				Contract contract =	new Contract();
+				contract.setId(rs.getInt("ID"));
 				contract.setContractId(rs.getString("CONTRACT_ID"));
 				contract.setContractType(rs.getString("CONTRACT_TYPE"));
 				contract.setCompanyNameOfFirst(rs.getString("COMPANY_NAME_OF_FIRST"));
@@ -148,9 +151,45 @@ public class ContractDaoImpl extends DaoJdbcTemplate implements ContractDao {
 				contract.setCompanyNameOfThird(rs.getString("COMPANY_NAME_OF_THIRD"));
 				contract.setContactNameOfThird(rs.getString("CONTACT_NAME_OF_THIRD"));
 				contract.setSales(rs.getString("SALES"));
-				contract.setContractSignDate(rs.getDate("CONTRACT_SIGN_DATE"));
-				contract.setContractStartDate(rs.getDate("CONTRACT_START_DATE"));
-				contract.setContractEndDate(rs.getDate("CONTRACT_END_DATE"));
+				contract.setContractSignDate(DateUtils.dateParseToString(rs.getDate("CONTRACT_SIGN_DATE")));
+				contract.setContractStartDate(DateUtils.dateParseToString(rs.getDate("CONTRACT_START_DATE")));
+				contract.setContractEndDate(DateUtils.dateParseToString(rs.getDate("CONTRACT_END_DATE")));
+				contract.setAmt(rs.getBigDecimal("AMT"));
+				contract.setPaymentTimes(rs.getInt("PAYMENT_TIMES"));
+				contract.setComleteInvoiceNumber(rs.getInt("COMPLETE_INVOICE_NUMBER"));
+				contract.setCompleteInvoiceAmt(rs.getBigDecimal("COMPLETE_INVOICE_AMT"));
+				contract.setRemainInvoiceAmt(rs.getBigDecimal("REMAIN_INVOICE_AMT"));
+				contract.setRemark(rs.getString("REMARK"));
+				return contract;
+			}});
+		if(null!=contractList&&contractList.size()>0){
+			return contractList.get(0);
+		}else
+			return null;
+	}
+
+	@Override
+	public Contract findByContractId(String ContractId) {
+		String sql ="select * from t_contract where CONTRACT_ID = ?";
+		List<Contract> contractList = getJdbcTempalte().query(sql, new Object[]{ContractId}, new RowMapper<Contract>(){
+
+			@Override
+			public Contract mapRow(ResultSet rs, int arg1)
+					throws SQLException {
+				Contract contract =	new Contract();
+				contract.setId(rs.getInt("ID"));
+				contract.setContractId(rs.getString("CONTRACT_ID"));
+				contract.setContractType(rs.getString("CONTRACT_TYPE"));
+				contract.setCompanyNameOfFirst(rs.getString("COMPANY_NAME_OF_FIRST"));
+				contract.setContactNameOfFirst(rs.getString("CONTACT_NAME_OF_FIRST"));
+				contract.setCompanyNameOfSecond(rs.getString("COMPANY_NAME_OF_SECOND"));
+				contract.setContactNameOfSecond(rs.getString("CONTACT_NAME_OF_SECOND"));
+				contract.setCompanyNameOfThird(rs.getString("COMPANY_NAME_OF_THIRD"));
+				contract.setContactNameOfThird(rs.getString("CONTACT_NAME_OF_THIRD"));
+				contract.setSales(rs.getString("SALES"));
+				contract.setContractSignDate(DateUtils.dateParseToString(rs.getDate("CONTRACT_SIGN_DATE")));
+				contract.setContractStartDate(DateUtils.dateParseToString(rs.getDate("CONTRACT_START_DATE")));
+				contract.setContractEndDate(DateUtils.dateParseToString(rs.getDate("CONTRACT_END_DATE")));
 				contract.setAmt(rs.getBigDecimal("AMT"));
 				contract.setPaymentTimes(rs.getInt("PAYMENT_TIMES"));
 				contract.setComleteInvoiceNumber(rs.getInt("COMPLETE_INVOICE_NUMBER"));

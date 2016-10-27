@@ -49,5 +49,17 @@ function show(){
 		</td>
 	</tr>
 </table>
+<br>
+<table>	
+	<tr>
+		<td>
+			<div>
+				<input type="button" value="导入合同信息" onclick="window.open('contract.do?method=importContractFilePage','_self')"><br>
+				<input type="button" value="浏览合同信息" onclick="window.open('contract.do?method=checkContractInfoPage','_self')"><br>
+				<input type="button" value="修改合同信息" onclick="window.open('contract.do?method=updateContractInfoPage','_self')"><br>
+			</div>
+		</td>
+	</tr>
+</table>
 </body>
 </html>

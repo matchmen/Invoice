@@ -3,7 +3,7 @@ package com.constant;
 public class Constants {
 
 	/**
-	 * 日期格式
+	 * yyyy/MM/dd
 	 */
 	public static String FORMAT_OF_DATE = "yyyy/MM/dd";
 	

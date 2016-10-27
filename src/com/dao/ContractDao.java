@@ -12,4 +12,5 @@ public interface ContractDao {
 	
 	public Contract find(Integer id);
 	
+	public Contract findByContractId(String ContractId);
 }

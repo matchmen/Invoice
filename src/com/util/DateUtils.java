@@ -9,39 +9,53 @@ import com.exception.SystemException;
 
 public class DateUtils {
 	/**
-	 * 字符串转换为Date
+	 * 锟街凤拷转锟斤拷为Date
+	 * 
 	 * @param str
 	 * @return
 	 * @throws SystemException
 	 */
-	public static Date StringParseToDate(String str) throws SystemException{
-		
+	public static Date StringParseToDate(String str) throws SystemException {
+
 		SimpleDateFormat sf = new SimpleDateFormat(Constants.FORMAT_OF_DATE);
-		
 		try {
 			return sf.parse(str);
 		} catch (ParseException e) {
-			throw new SystemException("系统异常，请联系管理员。");
+			throw new SystemException("鏃ユ湡杞崲寮傚父");
 		}
 	}
+
 	/**
-	 * Date转换为字符串
+	 * dateParseToString
 	 */
-	public static String dateParseToString(Date date){
-		SimpleDateFormat sf = new SimpleDateFormat(Constants.FORMAT_OF_DATE);
-		return sf.format(date);
+	public static String dateParseToString(Date date) {
+		if (null != date) {
+			SimpleDateFormat sf = new SimpleDateFormat(Constants.FORMAT_OF_DATE);
+			return sf.format(date);
+		} else {
+			return null;
+		}
 	}
+
 	/**
-	 * util.Date转换为sql.Date
+	 * utilParseToSql
 	 */
-	public static java.sql.Date utilParseToSql(Date date){
+	public static java.sql.Date utilParseToSql(Date date) {
 		return new java.sql.Date(date.getTime());
 	}
+
 	/**
-	 * sql.Date转换为util.Date
+	 * sqlParseToUtil
 	 */
-	public static java.sql.Date sqlParseToUtil(java.sql.Date date){
-		
+	public static java.sql.Date sqlParseToUtil(java.sql.Date date) {
+
 		return new java.sql.Date(date.getTime());
+	}
+	
+	public static Date intToDate(Long i){
+		if(null!=i){
+			return new Date(i);
+		}
+		return null;
 	}
 }

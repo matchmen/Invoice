@@ -11,6 +11,7 @@ import com.dao.ContractDao;
 import com.dao.DaoJdbcTemplate;
 import com.model.Contract;
 import com.util.DateUtils;
+import com.util.StringUtils;
 @Repository("contractDao")
 public class ContractDaoImpl extends DaoJdbcTemplate implements ContractDao {
 
@@ -56,13 +57,37 @@ public class ContractDaoImpl extends DaoJdbcTemplate implements ContractDao {
 			.append(contract.getContactNameOfSecond())
 			.append("','")
 			.append(contract.getItemName())
-			.append("','")
-			.append(contract.getContractSignDate())
-			.append("','")
-			.append(contract.getContractStartDate())
-			.append("','")
-			.append(contract.getContractEndDate())
-			.append("','")
+			.append("',");
+		if(null!=contract.getContractSignDate()
+				&&!StringUtils.isBlank(contract.getContractSignDate())
+				&&!StringUtils.isEmpty(contract.getContractSignDate())){
+			sb.append("'");
+			sb.append(contract.getContractSignDate());
+			sb.append("'");
+		}else{
+			sb.append("null");
+		}
+			sb.append(",");
+		if(null!=contract.getContractStartDate()
+				&&!StringUtils.isBlank(contract.getContractStartDate())
+				&&!StringUtils.isEmpty(contract.getContractStartDate())){
+			sb.append("'");
+			sb.append(contract.getContractStartDate());
+			sb.append("'");
+		}else{
+			sb.append("null");
+		}
+			sb.append(",");
+		if(null!=contract.getContractEndDate()
+				&&!StringUtils.isBlank(contract.getContractEndDate())
+				&&!StringUtils.isEmpty(contract.getContractEndDate())){
+			sb.append("'");
+			sb.append(contract.getContractEndDate());
+			sb.append("'");
+		}else{
+			sb.append("null");
+		}
+			sb.append(",'")
 			.append(contract.getAmt())
 			.append("','")
 			.append(contract.getPaymentTimes())
@@ -111,7 +136,7 @@ public class ContractDaoImpl extends DaoJdbcTemplate implements ContractDao {
 		getJdbcTempalte().update(sb.toString(), new Object[]{
 			contract.getContractId(),
 			contract.getContractType(),
-			contract.getContactNameOfFirst(),
+			contract.getCompanyNameOfFirst(),
 			contract.getContactNameOfFirst(),
 			contract.getCompanyNameOfSecond(),
 			contract.getContactNameOfSecond(),
@@ -119,9 +144,9 @@ public class ContractDaoImpl extends DaoJdbcTemplate implements ContractDao {
 			contract.getContactNameOfThird(),
 			contract.getContactNameOfSecond(),
 			contract.getItemName(),
-			contract.getContractSignDate(),
-			contract.getContractStartDate(),
-			contract.getContractEndDate(),
+			DateUtils.dateNullUtil(contract.getContractSignDate()),
+			DateUtils.dateNullUtil(contract.getContractStartDate()),
+			DateUtils.dateNullUtil(contract.getContractEndDate()),
 			contract.getAmt(),
 			contract.getPaymentTimes(),
 			contract.getComleteInvoiceNumber(),

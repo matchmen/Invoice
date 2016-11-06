@@ -1,5 +1,6 @@
 package com.controller.employee;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.controller.BaseController;
+import com.exception.BusinessException;
 import com.exception.ParameterException;
 import com.exception.SystemException;
 import com.model.Employee;
@@ -37,6 +39,10 @@ public class EmployeeContreller extends BaseController {
 			map.addAttribute("errorMsg", "用户名或密码不正确!");
 			return "login";
 		}
+	}
+	@RequestMapping(params="method=logout")
+	public String logout(HttpServletRequest request,ModelMap map) throws SystemException{
+		return "login";
 	}
 	@RequestMapping(params="method=addEmployee")
 	public String addEmployee(Employee employee,ModelMap map) throws ParameterException, SystemException{
@@ -100,10 +106,6 @@ public class EmployeeContreller extends BaseController {
 	public String addEmployeePage(){
 		return "addEmployee";
 	}
-	@RequestMapping(params="method=removeEmployeePage")
-	public String removeEmployeePage(){
-		return "removeEmployee";
-	}
 	@RequestMapping(params="method=setCpInfoPage")
 	public String setCpInfoPage(){
 		return "setCpInfo";
@@ -121,5 +123,20 @@ public class EmployeeContreller extends BaseController {
 		Employee em = (Employee)map.get("currEmployee");
 		map.addAttribute("employee", em);
 		return "updateEmployeeInfo";
+	}
+	
+	@RequestMapping(params="method=removeEmployee")
+	public String removeEmployee(ModelMap map,String str) throws ParameterException, BusinessException{
+		
+		Employee em = (Employee)map.get("currEmployee");
+		
+		employeeService.removeEmployee(str,em.getId());
+		
+		return "success";
+	}
+	
+	@RequestMapping(params="method=removeEmployeePage")
+	public String removeEmployeePage(){
+		return "removeEmployee";
 	}
 }

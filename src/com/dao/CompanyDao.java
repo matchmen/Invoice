@@ -1,6 +1,7 @@
 package com.dao;
 
 import com.model.Company;
+import com.model.Email;
 
 public interface CompanyDao {
 	
@@ -13,4 +14,8 @@ public interface CompanyDao {
 	public Company find(String companyCode);
 	
 	public Company findByOtherInfo(String str);
+	
+	public Email findMail(Integer empId);
+	
+	public Company find(Integer id);
 }

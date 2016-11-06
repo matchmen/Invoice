@@ -46,7 +46,7 @@ public class BaseController {
 		if(null!=ex.getPageName())
 			pageName = ex.getPageName();
 		if(null!=ex.getMessage())
-			map.setAttribute("errorMsg", ex.getMessage());
+			map.setAttribute("errorMsg", ex.getErrorMsg());
 		if(null!=ex.getObjStr()&&null!=ex.getObject())
 			map.setAttribute(ex.getObjStr(), ex.getObject());
 		return pageName;

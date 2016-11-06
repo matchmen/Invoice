@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.dao.CompanyDao;
 import com.dao.DaoJdbcTemplate;
 import com.model.Company;
+import com.model.Email;
 @Repository("companyDao")
 public class CompanyDaoImpl extends DaoJdbcTemplate implements CompanyDao{
 
@@ -105,6 +106,56 @@ public class CompanyDaoImpl extends DaoJdbcTemplate implements CompanyDao{
 		String sql = "SELECT * FROM t_company WHERE COMPANY_NAME = ? OR EMAIL = ? OR TELLPHONE_NUMBER = ?";
 		
 		List<Company> companyList = (List<Company>)getJdbcTempalte().query(sql, new Object[]{str,str,str}, new RowMapper<Company>(){
+
+			@Override
+			public Company mapRow(ResultSet rs, int arg1) throws SQLException {
+				Company company = new Company();
+				company.setId(rs.getInt("ID"));
+				company.setCompanyCode(rs.getString("COMPANY_CODE"));
+				company.setCompanyName(rs.getString("COMPANY_NAME"));
+				company.setPassword(rs.getString("PWORD"));
+				company.setCompanyEmail(rs.getString("EMAIL"));
+				company.setTellphoneNumber(rs.getString("TELLPHONE_NUMBER"));
+				company.setAbled(rs.getBoolean("ABLED"));
+				return company;
+			}
+		});
+		//返回数据件数大于0
+		if(companyList.size()>0){
+			return companyList.get(0);
+		}else{//否则返回null
+			return null;
+		}
+	}
+	@Override
+	public Email findMail(Integer empId) {
+		
+		String sql = "select * from t_mail where EMPLOYEE_ID = ? ";
+		
+		List<Email> emList =  getJdbcTempalte().query(sql, new Object[]{empId},new RowMapper<Email>(){
+
+			@Override
+			public Email mapRow(ResultSet rs, int arg1) throws SQLException {
+				Email em = new Email();
+				em.setSmailUser(rs.getString("MAIL"));
+				em.setPassword(rs.getString("PASSWORD"));
+				return em;
+			}
+		});
+		
+		if(null!=emList&&emList.size()>0){
+			return emList.get(0);
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public Company find(Integer id) {
+		
+		String sql = "SELECT * FROM t_company WHERE ID = ? AND ABLED = 1";
+		
+		List<Company> companyList = (List<Company>)getJdbcTempalte().query(sql, new Object[]{id}, new RowMapper<Company>(){
 
 			@Override
 			public Company mapRow(ResultSet rs, int arg1) throws SQLException {

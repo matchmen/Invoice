@@ -9,7 +9,7 @@ public interface EmployeeDao {
 	
 	public void add(Employee employee) throws SystemException ;
 	
-	public void remove(String id);
+	public void remove(Integer id);
 	
 	public void update(Employee employee);
 	
@@ -20,4 +20,7 @@ public interface EmployeeDao {
 	public void updatePw(String str,Integer id);
 	
 	public List<Employee> findList(String str);
+	
+	public Employee findByStr(String str);
+	
 }

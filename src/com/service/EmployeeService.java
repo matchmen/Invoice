@@ -1,5 +1,6 @@
 package com.service;
 
+import com.exception.BusinessException;
 import com.exception.ParameterException;
 import com.exception.SystemException;
 import com.model.Employee;
@@ -17,4 +18,6 @@ public interface EmployeeService {
 	public void updatePassword(Employee employee,String oldPassword,String password) throws ParameterException, SystemException;
 	
 	public Employee updateEmployeeInfo(Employee employee) throws ParameterException;
+	
+	public void removeEmployee(String str,Integer id) throws ParameterException, BusinessException;
 }

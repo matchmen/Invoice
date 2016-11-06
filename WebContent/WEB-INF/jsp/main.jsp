@@ -22,7 +22,7 @@ function show(){
 </head>
 <body>
 <font>${currEmployee.employeeName}</font>
-<input type="button" value="退出" onclick="window.open('employee.do?method=loginPage','_self')">
+<input type="button" value="退出" onclick="window.open('employee.do?method=logout','_self')">
 <br>
 <c:if test="${currEmployee.isAdmin}">
 <table>
@@ -31,7 +31,7 @@ function show(){
 			<div id="authority_admin">
 				<input type="button" value="设置公司信息" onclick="window.open('company.do?method=checkCompanyInfo','_self')"><br>
 				<input type="button" value="添加员工" onclick="window.open('employee.do?method=addEmployeePage','_self')"><br>
-				<input type="button" value="移除员工" onclick="window.open('employee.do?method=removeEmployeePage','_self')"><br>
+				<input type="button" value="注销员工信息" onclick="window.open('employee.do?method=removeEmployeePage','_self')"><br>
 			</div>
 		</td>
 	</tr>
@@ -57,6 +57,19 @@ function show(){
 				<input type="button" value="导入合同信息" onclick="window.open('contract.do?method=importContractFilePage','_self')"><br>
 				<input type="button" value="浏览合同信息" onclick="window.open('contract.do?method=checkContractInfoPage','_self')"><br>
 				<input type="button" value="修改合同信息" onclick="window.open('contract.do?method=updateContractInfoPage','_self')"><br>
+				<input type="button" value="添加合同管理者" onclick="window.open('contract.do?method=addContractInfoManagePage','_self')"><br>
+			</div>
+		</td>
+	</tr>
+</table>
+<br>
+<table>	
+	<tr>
+		<td>
+			<div>
+				<input type="button" value="添加发票" onclick="window.open('invoice.do?method=addInvoicePage','_self')"><br>
+				<input type="button" value="查看发票信息" onclick="window.open('invoice.do?method=checkInvoiceInfoPage','_self')"><br>
+				<input type="button" value="修改发票信息" onclick="window.open('invoice.do?method=updateInvoiceInfoPage','_self')"><br>
 			</div>
 		</td>
 	</tr>

@@ -58,7 +58,7 @@ public class EmployeeDaoImpl extends DaoJdbcTemplate implements EmployeeDao {
 	}
 
 	@Override
-	public void remove(String id) {
+	public void remove(Integer id) {
 
 		String sql = "update t_employee set ABLED = 0 WHERE ID = ? ";
 		
@@ -97,7 +97,7 @@ public class EmployeeDaoImpl extends DaoJdbcTemplate implements EmployeeDao {
 	@Override
 	public Employee find(Integer id) {
 		
-		String sql = "select * from t_employee where ID = ?";
+		String sql = "select * from t_employee where ID = ? and ABLED = 1";
 		List<Employee> employeeList = getJdbcTempalte().query(sql, new Object[]{id}, new RowMapper<Employee>(){
 
 			@Override
@@ -177,4 +177,34 @@ public class EmployeeDaoImpl extends DaoJdbcTemplate implements EmployeeDao {
 		else
 			return null;
 	}
+
+	@Override
+	public Employee findByStr(String str) {
+		
+		String sql = "select * from t_employee where ABLED = 1 and PHONE_NUMBER = ? or EMAIL = ?  ";
+		List<Employee> employeeList = getJdbcTempalte().query(sql, new Object[]{str,str}, new RowMapper<Employee>(){
+			@Override
+			public Employee mapRow(ResultSet rs, int arg1) throws SQLException {
+				Employee employee = new Employee();
+				employee.setId(rs.getInt("ID"));
+				employee.setEmployeeId(rs.getString("EMPLOYEE_ID"));
+				employee.setEmployeeName(rs.getString("EMPLOYEE_NAME"));
+				employee.setAbled(rs.getBoolean("ABLED"));
+				employee.setCompanyName(rs.getString("COMPANY_NAME"));
+				employee.setCompanyCode(rs.getString("COMPANY_CODE"));
+				employee.setDepartment(rs.getString("DEPARTMENT"));
+				employee.setEmail(rs.getString("EMAIL"));
+				employee.setPassword(rs.getString("PWORD"));
+				employee.setPosition(rs.getString("JOB"));
+				employee.setPhoneNumber(rs.getString("PHONE_NUMBER"));
+				employee.setIsAdmin(rs.getBoolean("ADMINISTRATOR"));
+				return employee;
+			}
+		});
+		if(null!=employeeList&&employeeList.size()>0){
+			return employeeList.get(0);
+		}
+		return null;
+	}
+
 }

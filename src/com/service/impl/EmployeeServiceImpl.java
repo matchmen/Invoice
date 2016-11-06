@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.dao.AuthorityDao;
 import com.dao.CompanySettingInfoDao;
 import com.dao.EmployeeDao;
+import com.exception.BusinessException;
 import com.exception.ParameterException;
 import com.exception.SystemException;
 import com.model.CompanySettingInfo;
@@ -20,6 +22,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private EmployeeDao employeeDao;
 	@Autowired
 	private CompanySettingInfoDao companySettingInfoDao;	
+	@Autowired
+	private AuthorityDao authorityDao;	
 	
 	@Override
 	public Employee login(String str,String password) throws SystemException {
@@ -199,5 +203,41 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employeeDao.update(employee);
 		
 		return employeeDao.find(employee.getId());
+	}
+
+	@Override
+	public void removeEmployee(String str,Integer id) throws ParameterException, BusinessException {
+		//为空验证
+		if(null==str||StringUtils.isBlank(str)||StringUtils.isEmpty(str)){
+			throw new ParameterException("removeEmployee", "str", "请输入邮箱或手机号!", str, "str");
+		}
+		Employee em = employeeDao.find(id);
+		//删除者身份验证
+		if(!em.getIsAdmin()){
+			throw new BusinessException("error", "没有删除权限", "", ""); 
+		}
+		
+		Employee delEmp =  employeeDao.findByStr(str);
+		//被删除者身份验证
+		if(null==delEmp){
+			throw new ParameterException("removeEmployee", "str", "邮箱或手机号不存在!", str, "str");
+		}
+		//删除者和被删除者是否同一家公司验证
+		if(!em.getCompanyCode().equals(delEmp.getCompanyCode())){
+			throw new ParameterException("removeEmployee", "str", "邮箱或手机号不存在!", str, "str");
+		}
+		//解除与公司身份关系
+		employeeDao.remove(delEmp.getId());
+
+		//解除数据信息绑定
+		List<Integer> idConList = authorityDao.findConByEmpId(delEmp.getId());
+		for (Integer id1 : idConList) {
+			authorityDao.removeCon(id1);
+		}
+		List<Integer> idInvList = authorityDao.findInvByEmpId(delEmp.getId());
+		for (Integer id2 : idInvList) {
+			authorityDao.removeInv(id2);
+		}
+
 	}
 }

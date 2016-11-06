@@ -15,53 +15,104 @@
 <form action="contract.do?method=checkContractInfo" method="post">
 	合同编号<input type="text" name="contractId" value="${contract.contractId}" id="contractId">
 	<input type="submit" value="搜索">
-</form>
 <c:if test="${!empty contract}">
-<table>	
-	<tr>
-		<td>合同编号</td><td>:${contract.contractId}</td>
+<table>
+	<tr>	
+		<td>合同编号</td>
+		<td>合同类型</td>
+		<td>产品和服务</td>
+		<td>甲方（客户）单位全称</td>
+		<td>甲方联系人</td>
+		<td>乙方（自己）单位全称</td>
+		<td>销售代表</td>
+		<td>丙方单位全称</td>
+		<td>丙方联系人</td>
+		<td>合同签订日期</td>
+		<td>合同生效日期</td>
+		<td>合同终止日期</td>
+		<td>合同金额</td>
+		<td>付款期数</td>
+		<td>已开发票</td>
+		<td>已开票金额</td>
+		<td>未开票金额</td>
+		<td>备注</td>
 	</tr>
 	<tr>
-		<td>合同类型</td><td>:${contract.contractType}</td>
-	</tr>
-	<tr>
-		<td>产品和服务</td><td>:${contract.itemName}</td>
-	</tr>
-	<tr>
-		<td>甲方（客户）单位全称</td><td>:${contract.companyNameOfFirst}</td>
-		<td>甲方联系人</td><td>:${contract.contactNameOfFirst}</td>
-	</tr>
-	<tr>
-		<td>乙方（自己）单位全称</td><td>:${contract.companyNameOfSecond}</td>
-		<td>销售代表</td><td>:${contract.sales}</td>
-	</tr>
-	<tr>
-		<td>丙方单位全称</td><td>:${contract.companyNameOfThird}</td>
-		<td>丙方联系人</td><td>:${contract.contactNameOfThird}</td>
-	</tr>
-	<tr>
-		<td>合同签订日期</td><td>:${contract.contractSignDate}</td>
-	</tr>
-	<tr>
-		<td>合同生效日期</td><td>:${contract.contractStartDate}</td>
-		<td>合同终止日期</td><td>:${contract.contractEndDate}</td>
-	</tr>
-	<tr>
-		<td>合同金额</td><td>:${contract.amt}</td>
-		<td>付款期数</td><td>:${contract.paymentTimes}</td>
-	</tr>
-	<tr>
-		<td>已开发票</td><td>:${contract.comleteInvoiceNumber}</td>
-		<td>已开票金额</td><td>:${contract.completeInvoiceAmt}</td>
-	</tr>
-	<tr>
-		<td>未开票金额</td><td>:${contract.remainInvoiceAmt}</td>
-	</tr>
-	<tr>
-		<td>备注</td><td>:${contract.remark}</td>
+		<td><input disabled="disabled" value="${contract.contractId}"></td>
+		<td><input disabled="disabled" value="${contract.contractType}"></td>
+		<td><input disabled="disabled" value="${contract.itemName}"></td>
+		<td><input disabled="disabled" value="${contract.companyNameOfFirst}"></td>
+		<td><input disabled="disabled" value="${contract.contactNameOfFirst}"></td>
+		<td><input disabled="disabled" value="${contract.companyNameOfSecond}"></td>
+		<td><input disabled="disabled" value="${contract.sales}"></td>
+		<td><input disabled="disabled" value="${contract.companyNameOfThird}"></td>
+		<td><input disabled="disabled" value="${contract.contactNameOfThird}"></td>
+		<td><input disabled="disabled" value="${contract.contractSignDate}"></td>
+		<td><input disabled="disabled" value="${contract.contractStartDate}"></td>
+		<td><input disabled="disabled" value="${contract.contractEndDate}"></td>
+		<td><input disabled="disabled" value="${contract.amt}"></td>
+		<td><input disabled="disabled" value="${contract.paymentTimes}"></td>
+		<td><input disabled="disabled" value="${contract.comleteInvoiceNumber}"></td>
+		<td><input disabled="disabled" value="${contract.completeInvoiceAmt}"></td>
+		<td><input disabled="disabled" value="${contract.remainInvoiceAmt}"></td>
+		<td><input disabled="disabled" value="${contract.remark}"></td>
 	</tr>
 </table>
 </c:if>
+<c:if test="${!empty invoiceList}">
+<font>开票信息</font>
+<table>
+	<tr>
+		<td>开票批次</td>
+		<td>发票状态</td>
+		<td>备注类型</td>
+		<td>计划开票日期</td>
+		<td>预计到账日期</td>
+		<td>出票公司</td>
+		<td>发票内容</td>
+		<td>发票类型</td>
+		<td>发票金额</td>
+		<td>税额</td>
+		<td>不含税金额</td>
+		<td>发票抬头</td>
+		<td>甲方纳税人编号</td>
+		<td>甲方开户行</td>
+		<td>甲方银行账户</td>
+		<td>乙方纳税人编号</td>
+		<td>乙方开户行</td>
+		<td>乙方银行账户</td>
+		<td>发票收件人</td>
+		<td>收件地址</td>
+		<td>收件人电话</td>
+	</tr>
+	<c:forEach items="${invoiceList}" var="item">
+	<tr>
+		<td><input disabled="disabled" value="${item.invoiceIndex}"></td>
+	    <td><input disabled="disabled" value="${item.invoiceStatus}"></td>
+	    <td><input disabled="disabled" value="${item.remarkType}"></td>
+	    <td><input disabled="disabled" value="${item.expectMakeInvoceDate}"></td>
+	    <td><input disabled="disabled" value="${item.expectPaymentDate}"></td>
+	    <td><input disabled="disabled" value="${item.makeInvoiceCompanyName}"></td>
+		<td><input disabled="disabled" value="${item.invoiceContent}"></td>
+		<td><input disabled="disabled" value="${item.invoiceType}"></td>
+		<td><input disabled="disabled" value="${item.amt}"></td>
+		<td><input disabled="disabled" value="${item.amtOfTax}"></td>
+		<td><input disabled="disabled" value="${item.amtOfNoTax}"></td>
+		<td><input disabled="disabled" value="${item.companyNameOfPurchaser}"></td>
+		<td><input disabled="disabled" value="${item.tpIdeNumOfPurchaser}"></td>
+		<td><input disabled="disabled" value="${item.bankTypeOfPurchaser}"></td>
+		<td><input disabled="disabled" value="${item.bankNumberOfPurchaser}"></td>
+		<td><input disabled="disabled" value="${item.companyNameOfSale}"></td>
+		<td><input disabled="disabled" value="${item.tpIdeNumOfSale}"></td>
+		<td><input disabled="disabled" value="${item.bankTypeOfSale}"></td>
+		<td><input disabled="disabled" value="${item.addresseeName}"></td>
+		<td><input disabled="disabled" value="${item.address}"></td>
+		<td><input disabled="disabled" value="${item.phoneNumber}"></td>
+	</tr>
+	</c:forEach>
+</table>
+</c:if>
 <input type="button" value="返回" onclick="window.open('employee.do?method=mainPage','_self')"><br>
+</form>
 </body>
 </html>

@@ -1,13 +1,12 @@
 package com.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class Invoice {
 	/**
 	 * ID
 	 */
-	private Integer id;
+	private Integer invId;
 	/**
 	 * 发票编号
 	 */
@@ -23,19 +22,19 @@ public class Invoice {
 	/**
 	 * 计划开票日期
 	 */
-	private Date expectMakeInvoceDate;
+	private String expectMakeInvoceDate;
 	/**
 	 * 实际开票日期
 	 */
-	private Date actualMakeInvoiceDate;
+	private String actualMakeInvoiceDate;
 	/**
 	 * 预计到账日期
 	 */
-	private Date expectPaymentDate;
+	private String expectPaymentDate;
 	/**
 	 * 实际到账日期
 	 */
-	private Date actualPaymentDate;
+	private String actualPaymentDate;
 	/**
 	 * 出票公司
 	 */
@@ -44,6 +43,10 @@ public class Invoice {
 	 * 税额
 	 */
 	private BigDecimal amtOfTax;
+	/**
+	 * 税率
+	 */
+	private BigDecimal rate;
 	/**
 	 * 不含税金额
 	 */
@@ -72,6 +75,10 @@ public class Invoice {
 	 * 发票类型
 	 */
 	private String invoiceType;
+	/**
+	 * 销售
+	 */
+	private String sales;
 	/**
 	 * 购买方名称
 	 */
@@ -127,14 +134,51 @@ public class Invoice {
 	/**
 	 * 寄送日期
 	 */
-	private Date expressDate;
-
-	public Integer getId() {
-		return id;
+	private String expressDate;
+	
+	/**
+	 * 备注
+	 */
+	private String invRemark;
+	
+	public BigDecimal getRate() {
+		return rate;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setRate(BigDecimal rate) {
+		this.rate = rate;
+	}
+
+	public String getExpressDate() {
+		return expressDate;
+	}
+
+	public String getInvRemark() {
+		return invRemark;
+	}
+
+	public void setInvRemark(String invRemark) {
+		this.invRemark = invRemark;
+	}
+
+	public void setExpressDate(String expressDate) {
+		this.expressDate = expressDate;
+	}
+
+	public String getSales() {
+		return sales;
+	}
+
+	public void setSales(String sales) {
+		this.sales = sales;
+	}
+
+	public Integer getInvId() {
+		return invId;
+	}
+
+	public void setInvId(Integer invId) {
+		this.invId = invId;
 	}
 
 	public String getInvoiceId() {
@@ -161,35 +205,35 @@ public class Invoice {
 		this.invoiceIndex = invoiceIndex;
 	}
 
-	public Date getExpectMakeInvoceDate() {
+	public String getExpectMakeInvoceDate() {
 		return expectMakeInvoceDate;
 	}
 
-	public void setExpectMakeInvoceDate(Date expectMakeInvoceDate) {
+	public void setExpectMakeInvoceDate(String expectMakeInvoceDate) {
 		this.expectMakeInvoceDate = expectMakeInvoceDate;
 	}
 
-	public Date getActualMakeInvoiceDate() {
+	public String getActualMakeInvoiceDate() {
 		return actualMakeInvoiceDate;
 	}
 
-	public void setActualMakeInvoiceDate(Date actualMakeInvoiceDate) {
+	public void setActualMakeInvoiceDate(String actualMakeInvoiceDate) {
 		this.actualMakeInvoiceDate = actualMakeInvoiceDate;
 	}
 
-	public Date getExpectPaymentDate() {
+	public String getExpectPaymentDate() {
 		return expectPaymentDate;
 	}
 
-	public void setExpectPaymentDate(Date expectPaymentDate) {
+	public void setExpectPaymentDate(String expectPaymentDate) {
 		this.expectPaymentDate = expectPaymentDate;
 	}
 
-	public Date getActualPaymentDate() {
+	public String getActualPaymentDate() {
 		return actualPaymentDate;
 	}
 
-	public void setActualPaymentDate(Date actualPaymentDate) {
+	public void setActualPaymentDate(String actualPaymentDate) {
 		this.actualPaymentDate = actualPaymentDate;
 	}
 
@@ -367,14 +411,6 @@ public class Invoice {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
-	}
-
-	public Date getExpressDate() {
-		return expressDate;
-	}
-
-	public void setExpressDate(Date expressDate) {
-		this.expressDate = expressDate;
 	}
 
 }

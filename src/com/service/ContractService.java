@@ -2,16 +2,23 @@ package com.service;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.bean.Admin;
+import com.bean.ContractBean;
+import com.exception.BusinessException;
 import com.exception.ParameterException;
-import com.model.Contract;
+import com.exception.SystemException;
 
 public interface ContractService {
 
-	public Contract createContract(CommonsMultipartFile file) throws ParameterException;
+	public ContractBean getContractInfo(CommonsMultipartFile file) throws ParameterException, BusinessException;
 	
-	public void preserveContract(Contract contract) throws ParameterException;
+	public void preserveContract(ContractBean ontractBean,Integer empId) throws ParameterException, SystemException;
 	
-	public Contract findContract(String contractId) throws ParameterException;
+	public ContractBean findContract(String contractId,Integer empId) throws ParameterException;
 	
-	public void updateContract(Contract contract) throws ParameterException;
+	public void updateContract(ContractBean contractBean,Integer empId) throws ParameterException, BusinessException;
+	
+	public void addContractInfoManage(Admin admin) throws ParameterException;
+	
+	public void addInvoiceInfoManage(Admin admin) throws ParameterException;
 }

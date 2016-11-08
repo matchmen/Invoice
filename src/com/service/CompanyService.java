@@ -15,8 +15,6 @@ public interface CompanyService {
 	
 	public void cancellate(Company company);
 	
-	public void validate(CompanyBean bean) throws ParameterException;
-	
 	public Company findByCompanyCode(String companyCode);
 	
 	public CompanySettingInfo findCompanySettingInfo(String companyCode);

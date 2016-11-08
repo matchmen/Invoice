@@ -49,7 +49,19 @@ public class Employee {
 	 * 是否是管理员
 	 */
 	private Boolean isAdmin;
+	/**
+	 * 个人还是公司
+	 */
+	private Boolean isCompany;
 	
+	public Boolean getIsCompany() {
+		return isCompany;
+	}
+
+	public void setIsCompany(Boolean isCompany) {
+		this.isCompany = isCompany;
+	}
+
 	public String getCompanyCode() {
 		return companyCode;
 	}

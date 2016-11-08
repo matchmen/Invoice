@@ -34,4 +34,7 @@
     <bean id="jdbcTempalte" class="org.springframework.jdbc.core.JdbcTemplate">
     	<property name="dataSource" ref="dataSource"/>  
     </bean>
+    <bean id="sourceUrl">
+    	<property name="sourceUrl"><value>D:/workspace/Invoice/WebContent/download/</value></property>
+    </bean>
     </beans>

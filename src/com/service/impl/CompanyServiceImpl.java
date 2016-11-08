@@ -28,16 +28,21 @@ public class CompanyServiceImpl implements CompanyService {
 	public void register(Company company,Employee employee) throws ParameterException, SystemException {
 		
 		CompanyBean bean = new CompanyBean();
-		
-		bean.setCompany(company);
-		
 		bean.setEmployee(employee);
-		//数据验证
-		validate(bean);
-		//添加
-		companyDao.add(company);
-		//设为管理员
-		employee.setIsAdmin(true);
+		if(null!=company){
+			bean.setCompany(company);
+			//设为管理员
+			employee.setIsAdmin(true);
+			//公司数据验证			
+			validateCompanyInfo(bean);
+		}
+		//用户数据验证
+		validateEmployee(bean);
+		
+		if(null!=company)
+			//添加
+			companyDao.add(company);
+
 		//密码加密
 		employee.setPassword(StringUtils.md5Password(employee.getPassword()));
 		//添加到员工表中
@@ -45,11 +50,13 @@ public class CompanyServiceImpl implements CompanyService {
 		
 		CompanySettingInfo companySettingInfo =new CompanySettingInfo();
 		//公司信息设置
-		companySettingInfo.setCompanyCode(company.getCompanyCode());
+		if(null!=company)
+			companySettingInfo.setCompanyCode(company.getCompanyCode());
 		companySettingInfo.setCueTimeFinance(7);
 		companySettingInfo.setCueTimeSales(7);
-		companySettingInfo.setInitPassword("88888");
+		companySettingInfo.setInitPassword("000000");
 		companySettingInfoDao.add(companySettingInfo);
+		
 	}
 
 	@Override
@@ -65,71 +72,19 @@ public class CompanyServiceImpl implements CompanyService {
 		
 	}
 
-	@Override
-	public void validate(CompanyBean bean) throws ParameterException {
-		
-		//公司名称为空验证
-		if(null==bean.getCompany().getCompanyName()
-				||StringUtils.isBlank(bean.getCompany().getCompanyName())
-				||StringUtils.isEmpty(bean.getCompany().getCompanyName())){
-			throw new ParameterException("register", "comoanyName", "公司名称不能为空!", bean, "companybean");
-		}
-		/*Company companyNameByName = companyDao.findByOtherInfo(bean.getCompany().getCompanyName());
-		//数据库存在判断
-		if(null!=companyNameByName){
-			throw new ParameterException("register", "comoanyName", "公司名称已经被注册!", bean, "companybean");
-		}*/
-		
-		Company companyNameByCode = companyDao.find(bean.getCompany().getCompanyCode());
-		//公司代码为空验证
-		if(null==bean.getCompany().getCompanyCode()
-				||StringUtils.isBlank(bean.getCompany().getCompanyCode())
-				||StringUtils.isEmpty(bean.getCompany().getCompanyCode())){
-			throw new ParameterException("register", "companyCode", "公司代码不能为空!", bean, "companybean");
-		}
-		//数据库是否存在验证
-		if(null!=companyNameByCode){
-			throw new ParameterException("register", "companyCode", "公司代码已经被注册!", bean, "companybean");
-		}
-		//为空验证
-		if(null==bean.getCompany().getCompanyEmail()
-				||StringUtils.isBlank(bean.getCompany().getCompanyEmail())
-				||StringUtils.isEmpty(bean.getCompany().getCompanyEmail())){
-			throw new ParameterException("register", "companyEmail", "公司邮箱不能为空!",bean, "companybean");
-		}
-		//格式验证
-		if(!StringUtils.isEmail(bean.getCompany().getCompanyEmail())){
-			throw new ParameterException("register", "companyEmail", "公司邮箱格式无效!",bean, "companybean");
-		}
-		Company companyNameByEmail = companyDao.findByOtherInfo(bean.getCompany().getCompanyEmail());
-		//数据库是否存在验证
-		if(null!=companyNameByEmail){
-			throw new ParameterException("register", "companyEmail", "公司邮箱已经被注册!", bean, "companybean");
-		}
-		//为空验证
-		if(null==bean.getCompany().getTellphoneNumber()
-				||StringUtils.isBlank(bean.getCompany().getTellphoneNumber())
-				||StringUtils.isEmpty(bean.getCompany().getTellphoneNumber())){
-			throw new ParameterException("register", "tellphoneNumber", "公司电话不能为空!", bean, "companybean");
-		}
-		Company companyNameByph = companyDao.findByOtherInfo(bean.getCompany().getTellphoneNumber());
-		//数据库是否存在验证
-		if(null!=companyNameByph){
-			throw new ParameterException("register", "tellphoneNumber", "公司电话已经被注册!", bean, "companybean");
-		}
-		
+	private void validateEmployee(CompanyBean bean) throws ParameterException{
 		if(null!=bean.getEmployee()){
 			//为空验证
-			if(null==bean.getEmployee().getEmployeeId()
+			/*if(null==bean.getEmployee().getEmployeeId()
 					||StringUtils.isBlank(bean.getEmployee().getEmployeeId())
 					||StringUtils.isEmpty(bean.getEmployee().getEmployeeId())){
 				throw new ParameterException("register", "employeeId", "员工号不能为空!", bean, "companybean");
-			}
+			}*/
 			//为空验证
 			if(null==bean.getEmployee().getEmployeeName()
 					||StringUtils.isBlank(bean.getEmployee().getEmployeeName())
 					||StringUtils.isEmpty(bean.getEmployee().getEmployeeName())){
-				throw new ParameterException("register", "employeeId", "员工姓名不能为空!", bean, "companybean");
+				throw new ParameterException("register", "employeeId", "姓名不能为空!", bean, "companybean");
 			}
 			//电话号码验证
 			if(null==bean.getEmployee().getPhoneNumber()
@@ -168,7 +123,62 @@ public class CompanyServiceImpl implements CompanyService {
 				throw new ParameterException("register", "password", "密码不能为空!", bean, "companybean");
 			}
 		}
+
 	}
+	
+	private void validateCompanyInfo(CompanyBean bean) throws ParameterException {
+		
+		//公司名称为空验证
+		if(null==bean.getCompany().getCompanyName()
+				||StringUtils.isBlank(bean.getCompany().getCompanyName())
+				||StringUtils.isEmpty(bean.getCompany().getCompanyName())){
+			throw new ParameterException("register", "comoanyName", "公司名称不能为空!", bean, "companybean");
+		}
+		/*Company companyNameByName = companyDao.findByOtherInfo(bean.getCompany().getCompanyName());
+		//数据库存在判断
+		if(null!=companyNameByName){
+			throw new ParameterException("register", "comoanyName", "公司名称已经被注册!", bean, "companybean");
+		}*/
+		
+		Company companyNameByCode = companyDao.find(bean.getCompany().getCompanyCode());
+		//公司代码为空验证
+		if(null==bean.getCompany().getCompanyCode()
+				||StringUtils.isBlank(bean.getCompany().getCompanyCode())
+				||StringUtils.isEmpty(bean.getCompany().getCompanyCode())){
+			throw new ParameterException("register", "companyCode", "公司代码不能为空!", bean, "companybean");
+		}
+		//数据库是否存在验证
+		if(null!=companyNameByCode){
+			throw new ParameterException("register", "companyCode", "公司代码已经被注册!", bean, "companybean");
+		}
+		/*//为空验证
+		if(null==bean.getCompany().getCompanyEmail()
+				||StringUtils.isBlank(bean.getCompany().getCompanyEmail())
+				||StringUtils.isEmpty(bean.getCompany().getCompanyEmail())){
+			throw new ParameterException("register", "companyEmail", "公司邮箱不能为空!",bean, "companybean");
+		}*/
+		//格式验证
+		/*if(!StringUtils.isEmail(bean.getCompany().getCompanyEmail())){
+			throw new ParameterException("register", "companyEmail", "公司邮箱格式无效!",bean, "companybean");
+		}*/
+		/*Company companyNameByEmail = companyDao.findByOtherInfo(bean.getCompany().getCompanyEmail());
+		//数据库是否存在验证
+		if(null!=companyNameByEmail){
+			throw new ParameterException("register", "companyEmail", "公司邮箱已经被注册!", bean, "companybean");
+		}
+		//为空验证
+		if(null==bean.getCompany().getTellphoneNumber()
+				||StringUtils.isBlank(bean.getCompany().getTellphoneNumber())
+				||StringUtils.isEmpty(bean.getCompany().getTellphoneNumber())){
+			throw new ParameterException("register", "tellphoneNumber", "公司电话不能为空!", bean, "companybean");
+		}
+		Company companyNameByph = companyDao.findByOtherInfo(bean.getCompany().getTellphoneNumber());
+		//数据库是否存在验证
+		if(null!=companyNameByph){
+			throw new ParameterException("register", "tellphoneNumber", "公司电话已经被注册!", bean, "companybean");
+		}*/
+		
+			}
 
 	@Override
 	public Company findByCompanyCode(String companyCode) {

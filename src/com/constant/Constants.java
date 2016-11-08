@@ -153,4 +153,6 @@ public class Constants {
 		}
 		return "";
 	}
+	
+	public static String EXCEL_FILENAME = "合同信息表.xlsx";
 }

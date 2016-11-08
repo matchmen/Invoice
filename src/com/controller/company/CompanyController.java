@@ -29,10 +29,17 @@ public class CompanyController extends BaseController{
 		
 		return "registerSuccess";
 	}
-	
-	@RequestMapping(params="method=registerPage")
-	public String registerPage(){
+	@RequestMapping(params="method=registerType")
+	public String registerType(Employee employee,ModelMap map) throws ParameterException, SystemException{
+		
+		map.addAttribute("employee", employee);
+		
 		return "register";
+	}
+	
+	@RequestMapping(params="method=registerTypePage")
+	public String registerTypePage(){
+		return "registerType";
 	}
 	@RequestMapping(params="method=setCompanyInfo")
 	public String setCompanyInfo(CompanySettingInfo info,HttpSession httpSession) throws ParameterException, SystemException{

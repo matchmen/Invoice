@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri ="http://java.sun.com/jsp/jstl/core" %>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -11,7 +12,10 @@
 <body onload="errSetting()">
 	<font style="color:red">${errorMsg}</font>
 	<input  type="hidden"  id="errorMsg" value="${errorElementId}">
+	<input  type="hidden"  name="isCompany" value="${employee.isCompany}">
 	<form action="company.do?method=register" method="post">
+	<c:if test="${employee.isCompany}">
+		公司注册<input type="checkbox" name="isCompany" checked="checked" onchange="change(this)" value="true">
 		<font>请输入公司信息</font>
 		<table>
 			<tr>
@@ -21,19 +25,17 @@
 				<td>公司代码</td><td><input type="text" name="companyCode" id="companyCode" value="${companybean.company.companyCode}"><font style="color:red">*</font></td>		
 			</tr>		
 			<tr>
-				<td>公司邮箱</td><td><input type="text" name="companyEmail" id="companyEmail" value="${companybean.company.companyEmail}"><font style="color:red">*</font></td>		
+				<td>公司邮箱</td><td><input type="text" name="companyEmail" id="companyEmail" value="${companybean.company.companyEmail}"></td>		
 			</tr>
 			<tr>
-				<td>公司电话</td><td><input type="text" name="tellphoneNumber" id="tellphoneNumber" value="${companybean.company.tellphoneNumber}"><font style="color:red">*</font></td>		
+				<td>公司电话</td><td><input type="text" name="tellphoneNumber" id="tellphoneNumber" value="${companybean.company.tellphoneNumber}"></td>		
 			</tr>
 		</table>
-		<font>请输入管理员信息</font>
+		</c:if>
+		<font>请输入个人信息</font>
 		<table>
 			<tr>
-				<td>员工号</td><td><input type="text" name="employeeId" value="${companybean.employee.employeeId}"><font style="color:red">*</font></td>
-			</tr>
-			<tr>
-				<td>员工姓名</td><td><input type="text" name="employeeName" value="${companybean.employee.employeeName}"><font style="color:red">*</font></td>
+				<td>姓名</td><td><input type="text" name="employeeName" value="${companybean.employee.employeeName}"><font style="color:red">*</font></td>
 			</tr>
 			<tr>
 				<td>手机号码</td><td><input type="text" name="phoneNumber" value="${companybean.employee.phoneNumber}"><font style="color:red">*</font></td>

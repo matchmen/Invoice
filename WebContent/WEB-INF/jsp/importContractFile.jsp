@@ -22,7 +22,7 @@ function uploadfile(){
 <input  type="hidden"  id="errorMsg" value="${errorElementId}">
 <form id="formId" method="post"  action="contract.do?method=importContractFile">
 <c:if test="${empty contract}">
-	<input type="file"  id="uploadedfile" name="file" onchange="uploadfile()" accept=".xls" ><br>
+	<input type="file"  id="uploadedfile" name="file" onchange="uploadfile()" accept=".xlsx" ><br>
 	<a href="contract.do?method=downloadExcel" >下载合同模板</a>
 	<br>
 </c:if>

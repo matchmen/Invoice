@@ -1,7 +1,15 @@
 package com.controller.contract;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.core.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,6 +19,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.bean.Admin;
 import com.bean.ContractBean;
+import com.constant.Constants;
 import com.controller.BaseController;
 import com.exception.BusinessException;
 import com.exception.ParameterException;
@@ -25,6 +34,8 @@ public class ContractController extends BaseController {
 	
 	@Autowired
 	private ContractService contractService;
+	@Autowired
+	private String sourceUrl;
 	
 	@RequestMapping(params="method=addContractInfoManage")
 	public String addContractInfoManage(Admin admin,HttpSession httpSession) throws ParameterException{
@@ -122,9 +133,37 @@ public class ContractController extends BaseController {
 	}
 	
 	@RequestMapping(params="method=downloadExcel")
-	public String downloadExcel(){
+	public String downloadExcel(HttpServletResponse response,HttpServletRequest req) throws SystemException, UnsupportedEncodingException{
+		//设置文件MIME类型  
+        response.setContentType(req.getServletContext().getMimeType(Constants.EXCEL_FILENAME));  
+        //设置Content-Disposition  
+        response.setHeader("Content-Disposition", "attachment;filename="+new String(Constants.EXCEL_FILENAME.getBytes(),"iso-8859-1"));  
+        //读取目标文件，通过response将目标文件写到客户端  
+        //获取目标文件的绝对路径  
+        String fullFileName = sourceUrl+Constants.EXCEL_FILENAME;
+        //读取文件  
+        InputStream in;
+        OutputStream out;
+		try {
+			in = new FileInputStream(fullFileName);
+			out = response.getOutputStream();
+			 //写文件  
+	        int b = 0;  
+	        while((b=in.read())!= -1)  
+	        {  
+	            out.write(b);  
+	        }  
+	        in.close();  
+	        response.flushBuffer();
+	        out.close();
+	        
+		} catch (Exception e) {
+			throw new SystemException("error", "下载异常！");
+		}finally{
+			
+		}
 		
-		return "importContractFile";
+        return "importContractFile";
 	}
 	
 	@RequestMapping(params="method=uploadExcel")

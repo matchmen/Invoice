@@ -17,7 +17,7 @@
 			<td>密码</td><td><input type="password" name="password" id="password" ></td>
 		</tr>
 	</table>
-	<input type="submit" value="登陆" ><input type="button" onclick="window.open('company.do?method=registerPage','_self')" value="注册公司" >
+	<input type="submit" value="登陆" ><input type="button" onclick="window.open('company.do?method=registerTypePage','_self')" value="注册公司" >
 	</form>
 </body>
 </html>

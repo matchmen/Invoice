@@ -12,36 +12,35 @@
 <body onload="errSetting()">
 	<font style="color:red">${errorMsg}</font>
 	<input  type="hidden"  id="errorMsg" value="${errorElementId}">
-	<input  type="hidden"  name="isCompany" value="${employee.isCompany}">
-	<form action="company.do?method=register" method="post">
-	<c:if test="${employee.isCompany}">
-		公司注册<input type="checkbox" name="isCompany" checked="checked" onchange="change(this)" value="true">
+	<form action="user.do?method=register" method="post">
+	<input  type="hidden"  name="isCompany" value="${userBean.user.isCompany}">
+	<c:if test="${userBean.user.isCompany}">
 		<font>请输入公司信息</font>
 		<table>
 			<tr>
-				<td>公司名称</td><td><input type="text" name="companyName" id="companyName" value="${companybean.company.companyName}"><font style="color:red">*</font></td>		
+				<td>公司名称</td><td><input type="text" name="companyName" id="companyName" value="${userBean.company.companyName}"><font style="color:red">*</font></td>		
 			</tr>		
 			<tr>
-				<td>公司代码</td><td><input type="text" name="companyCode" id="companyCode" value="${companybean.company.companyCode}"><font style="color:red">*</font></td>		
+				<td>公司代码</td><td><input type="text" name="companyCode" id="companyCode" value="${userBean.company.companyCode}"><font style="color:red">*</font></td>		
 			</tr>		
 			<tr>
-				<td>公司邮箱</td><td><input type="text" name="companyEmail" id="companyEmail" value="${companybean.company.companyEmail}"></td>		
+				<td>公司邮箱</td><td><input type="text" name="companyEmail" id="companyEmail" value="${userBean.company.companyEmail}"></td>		
 			</tr>
 			<tr>
-				<td>公司电话</td><td><input type="text" name="tellphoneNumber" id="tellphoneNumber" value="${companybean.company.tellphoneNumber}"></td>		
+				<td>公司电话</td><td><input type="text" name="tellphoneNumber" id="tellphoneNumber" value="${userBean.company.tellphoneNumber}"></td>		
 			</tr>
 		</table>
 		</c:if>
 		<font>请输入个人信息</font>
 		<table>
 			<tr>
-				<td>姓名</td><td><input type="text" name="employeeName" value="${companybean.employee.employeeName}"><font style="color:red">*</font></td>
+				<td>姓名</td><td><input type="text" name="username" id="username" value="${userBean.user.username}"><font style="color:red">*</font></td>
 			</tr>
 			<tr>
-				<td>手机号码</td><td><input type="text" name="phoneNumber" value="${companybean.employee.phoneNumber}"><font style="color:red">*</font></td>
+				<td>手机号码</td><td><input type="text" name="phoneNumber" id="phoneNumber" value="${userBean.user.phoneNumber}"><font style="color:red">*</font></td>
 			</tr>
 			<tr>
-				<td>邮箱</td><td><input type="text" name="email" id="email" value="${companybean.employee.email}"><font style="color:red">*</font></td>
+				<td>邮箱</td><td><input type="text" name="email" id="email" value="${userBean.user.email}"><font style="color:red">*</font></td>
 			</tr>
 			<tr>
 				<td>登录密码</td><td><input type="password" name="password" id="password"><font style="color:red">*</font></td>		
@@ -49,14 +48,20 @@
 			<tr>
 				<td>再次输入密码</td><td><input type="password" id="secondPassword" ></td>		
 			</tr>
+		<c:if test="${userBean.user.isCompany}">	
 			<tr>
-				<td>部门</td><td><input type="text" name="department" id="department" value="${companybean.employee.department}"></td>
+				<td>员工编号</td><td><input type="text" name="employeeId" value="${companybean.user.employeeId}"></td>	
 			</tr>
 			<tr>
-				<td>职位</td><td><input type="text" name="position" id="position" value="${companybean.employee.position}"></td>
+				<td>部门</td><td><input type="text" name="department" id="department" value="${companybean.user.department}"></td>
 			</tr>
+			<tr>
+				<td>职位</td><td><input type="text" name="position" id="position" value="${companybean.user.position}"></td>
+			</tr>
+		</c:if>		
 		</table>
-		<input type="submit" value="注册公司" ><input type="button" value="取消" onclick="window.open('employee.do?method=loginPage','_self')">
+		<input type="submit" value="注册公司" >
+		<input type="button" value="取消" onclick="window.open('user.do?method=loginPage','_self')">
 	</form>
 </body>
 </html>

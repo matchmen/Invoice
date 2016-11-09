@@ -29,7 +29,7 @@ import com.constant.Constants;
 import com.dao.AuthorityDao;
 import com.dao.CompanyDao;
 import com.dao.ContractDao;
-import com.dao.EmployeeDao;
+import com.dao.UserDao;
 import com.dao.InvoiceDao;
 import com.exception.BusinessException;
 import com.exception.ParameterException;
@@ -37,7 +37,7 @@ import com.exception.SystemException;
 import com.model.Authority;
 import com.model.Company;
 import com.model.Contract;
-import com.model.Employee;
+import com.model.User;
 import com.model.Invoice;
 import com.service.ContractService;
 import com.util.StringUtils;
@@ -51,7 +51,7 @@ public class ContractServiceImpl implements ContractService{
 	@Autowired
 	private CompanyDao companyDao;
 	@Autowired
-	private EmployeeDao employeeDao;
+	private UserDao userDao;
 	@Autowired
 	private InvoiceDao invoiceDao;
 	
@@ -326,7 +326,7 @@ public class ContractServiceImpl implements ContractService{
 				// 数据验证
 				validate(contractBean.getContract());
 
-				Employee emp = employeeDao.find(empId);
+				User emp = userDao.find(empId);
 
 				if (null != emp) {
 					Company com = companyDao.find(emp.getCompanyCode());
@@ -372,7 +372,7 @@ public class ContractServiceImpl implements ContractService{
 		
 		Contract con = contractDao.findByContractId(contractId);
 		
-		Employee emp = employeeDao.find(empId);
+		User emp = userDao.find(empId);
 		
 		Company com = companyDao.find(emp.getCompanyCode());
 		//为null判断，几个对象中只要有一个为空则返回null
@@ -409,7 +409,7 @@ public class ContractServiceImpl implements ContractService{
 				
 				Contract con = contractDao.findByContractId(contract.getContractId());
 				
-				Employee emp = employeeDao.find(empId);
+				User emp = userDao.find(empId);
 				
 				Company com = companyDao.find(emp.getCompanyCode());
 				
@@ -528,7 +528,7 @@ public class ContractServiceImpl implements ContractService{
 			Company company = null;
 			Authority auth = new Authority();
 			Contract contract = null;
-			Employee addEmp = null;
+			User addEmp = null;
 			//合同编号为空验证
 			if(null==admin.getContractId()
 					||StringUtils.isBlank(admin.getContractId())
@@ -541,15 +541,15 @@ public class ContractServiceImpl implements ContractService{
 				}
 			}
 			//添加人员身份验证
-			if(null!=admin.getEmployee()){
-				company = companyDao.find(admin.getEmployee().getCompanyCode());
+			if(null!=admin.getUser()){
+				company = companyDao.find(admin.getUser().getCompanyCode());
 				//判断是否有权限
 				if(null==company){
 					throw new ParameterException("addContractInfoManage","","您没有此合同管理权限!",admin,"admin");
 				}
 				auth.setComId(company.getId());
 				auth.setConId(contract.getId());
-				auth.setEmpId(admin.getEmployee().getId());
+				auth.setEmpId(admin.getUser().getId());
 				if(null==authorityDao.findCon(auth)){
 					throw new ParameterException("addContractInfoManage","","您没有此合同管理权限!",admin,"admin");
 				}
@@ -560,11 +560,11 @@ public class ContractServiceImpl implements ContractService{
 			if(null!=admin.getStr()
 					||!StringUtils.isBlank(admin.getStr())
 					||!StringUtils.isEmpty(admin.getStr())){
-				List<Employee> empList = employeeDao.findList(admin.getStr());
+				List<User> empList = userDao.findList(admin.getStr());
 				//判断该手机号的用户是否在对应公司下
 				if(null==empList
 						||null==empList.get(0)
-						||!admin.getEmployee().getCompanyCode().equals(empList.get(0).getCompanyCode())){
+						||!admin.getUser().getCompanyCode().equals(empList.get(0).getCompanyCode())){
 					throw new ParameterException("addContractInfoManage","str","邮箱或手机号不存在",admin,"admin");
 				}
 				addEmp=empList.get(0);

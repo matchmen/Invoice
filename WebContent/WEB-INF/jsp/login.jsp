@@ -7,17 +7,18 @@
 <title>登 陆</title>
 </head>
 <body>
-	<form action="employee.do?method=login" method="post">
+	<form action="user.do?method=login" method="post">
 	<table>
 		<tr><td><font style="color:red">${errorMsg}</font></td></tr>
 		<tr>
-			<td>邮箱或手机号码</td><td><input type="text" name="username" id="companyCode" ></td>
+			<td>邮箱或手机号码</td><td><input type="text" name="username" id="username" ></td>
 		</tr>
 		<tr>
 			<td>密码</td><td><input type="password" name="password" id="password" ></td>
 		</tr>
 	</table>
-	<input type="submit" value="登陆" ><input type="button" onclick="window.open('company.do?method=registerTypePage','_self')" value="注册公司" >
+	<input type="submit" value="登陆" >
+	<input type="button" onclick="window.open('user.do?method=registerTypePage','_self')" value="注册" >
 	</form>
 </body>
 </html>

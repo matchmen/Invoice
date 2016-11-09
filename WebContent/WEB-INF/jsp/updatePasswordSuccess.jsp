@@ -7,6 +7,6 @@
 <title>密码修改成功</title>
 </head>
 <body>
-	密码修改成功! <a href="employee.do?method=loginPage">返回登录界面</a>
+	密码修改成功! <a href="user.do?method=mainPage">返回登录界面</a>
 </body>
 </html>

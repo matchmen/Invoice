@@ -20,8 +20,6 @@ public class CompanyDaoImpl extends DaoJdbcTemplate implements CompanyDao{
 		StringBuffer sql = new StringBuffer("INSERT INTO t_company(")
 			//公司名称
 			.append("COMPANY_NAME,")
-			//密码
-			.append("PWORD,")
 			//邮箱
 			.append("EMAIL,")
 			//公司代码
@@ -31,9 +29,6 @@ public class CompanyDaoImpl extends DaoJdbcTemplate implements CompanyDao{
 			.append(" VALUES('")
 			//单位
 			.append(company.getCompanyName())
-			.append("','")
-			//密码
-			.append(company.getPassword())
 			.append("','")
 			//邮箱
 			.append(company.getCompanyEmail())
@@ -60,13 +55,11 @@ public class CompanyDaoImpl extends DaoJdbcTemplate implements CompanyDao{
 		StringBuffer sql = new StringBuffer("update t_company set ")
 				.append("COMPANY_CODE = ? ,")
 				.append("COMPANY_NAME = ? ,")
-				.append("PWORD = ? ,")
 				.append("EMAIL = ? ,")
 				.append("TELLPHONE_NUMBER = ? ");
 		
 		getJdbcTempalte().update(sql.toString(), new Object[]{company.getCompanyCode(),
 				company.getCompanyName(),
-				company.getPassword(),
 				company.getCompanyEmail(),
 				company.getTellphoneNumber()});
 	}
@@ -85,7 +78,6 @@ public class CompanyDaoImpl extends DaoJdbcTemplate implements CompanyDao{
 				company.setId(rs.getInt("ID"));
 				company.setCompanyCode(rs.getString("COMPANY_CODE"));
 				company.setCompanyName(rs.getString("COMPANY_NAME"));
-				company.setPassword(rs.getString("PWORD"));
 				company.setCompanyEmail(rs.getString("EMAIL"));
 				company.setTellphoneNumber(rs.getString("TELLPHONE_NUMBER"));
 				company.setAbled(rs.getBoolean("ABLED"));
@@ -113,7 +105,6 @@ public class CompanyDaoImpl extends DaoJdbcTemplate implements CompanyDao{
 				company.setId(rs.getInt("ID"));
 				company.setCompanyCode(rs.getString("COMPANY_CODE"));
 				company.setCompanyName(rs.getString("COMPANY_NAME"));
-				company.setPassword(rs.getString("PWORD"));
 				company.setCompanyEmail(rs.getString("EMAIL"));
 				company.setTellphoneNumber(rs.getString("TELLPHONE_NUMBER"));
 				company.setAbled(rs.getBoolean("ABLED"));
@@ -163,7 +154,6 @@ public class CompanyDaoImpl extends DaoJdbcTemplate implements CompanyDao{
 				company.setId(rs.getInt("ID"));
 				company.setCompanyCode(rs.getString("COMPANY_CODE"));
 				company.setCompanyName(rs.getString("COMPANY_NAME"));
-				company.setPassword(rs.getString("PWORD"));
 				company.setCompanyEmail(rs.getString("EMAIL"));
 				company.setTellphoneNumber(rs.getString("TELLPHONE_NUMBER"));
 				company.setAbled(rs.getBoolean("ABLED"));

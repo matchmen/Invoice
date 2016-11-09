@@ -21,17 +21,19 @@ function show(){
 </style> -->
 </head>
 <body>
-<font>${currEmployee.employeeName}</font>
-<input type="button" value="退出" onclick="window.open('employee.do?method=logout','_self')">
+<font>${currUser.username}</font>
+<input type="button" value="退出" onclick="window.open('user.do?method=logout','_self')">
 <br>
-<c:if test="${currEmployee.isAdmin}">
+<c:if test="${currUser.isAdmin}">
 <table>
 	<tr>
 		<td>
 			<div id="authority_admin">
-				<input type="button" value="设置公司信息" onclick="window.open('company.do?method=checkCompanyInfo','_self')"><br>
-				<input type="button" value="添加员工" onclick="window.open('employee.do?method=addEmployeePage','_self')"><br>
-				<input type="button" value="注销员工信息" onclick="window.open('employee.do?method=removeEmployeePage','_self')"><br>
+				<input type="button" value="设置基本信息" onclick="window.open('user.do?method=setBaseInfoPage','_self')"><br>
+				<c:if test="${currUser.isCompany}">
+					<input type="button" value="添加员工" onclick="window.open('user.do?method=addUserPage','_self')"><br>
+					<input type="button" value="注销员工信息" onclick="window.open('user.do?method=removeUserPage','_self')"><br>
+				</c:if>
 			</div>
 		</td>
 	</tr>
@@ -42,9 +44,9 @@ function show(){
 	<tr>
 		<td>
 			<div>
-				<input type="button" value="查看个人信息" onclick="window.open('employee.do?method=checkEmployeeInfo','_self')"><br>
-				<input type="button" value="修改个人信息" onclick="window.open('employee.do?method=updateEmployeeInfoPage','_self')"><br>
-				<input type="button" value="修改密码" onclick="window.open('employee.do?method=updatePasswordPage','_self')"><br>
+				<input type="button" value="查看个人信息" onclick="window.open('user.do?method=checkUserInfo','_self')"><br>
+				<input type="button" value="修改个人信息" onclick="window.open('user.do?method=updateUserInfoPage','_self')"><br>
+				<input type="button" value="修改密码" onclick="window.open('user.do?method=updatePasswordPage','_self')"><br>
 			</div>
 		</td>
 	</tr>

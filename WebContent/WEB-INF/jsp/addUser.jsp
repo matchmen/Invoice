@@ -20,31 +20,32 @@ function errSetting(){
 <body>
 <font style="color:red">${errorMsg}</font>
 <input  type="hidden"  id="errorMsg" value="${errorElementId}">
-<form action="employee.do?method=addEmployee" method="post">
+<form action="user.do?method=addUser" method="post">
 <table>
 		<tr>
-			<td>员工号</td><td><input type="text" name="employeeId" value="${employee.employeeId}"><font style="color:red">*</font></td>
+			<td>员工号</td><td><input type="text" name="employeeId" value="${user.employeeId}"></td>
 		</tr>
 		<tr>
-			<td>员工姓名</td><td><input type="text" name="employeeName" value="${employee.employeeName}"><font style="color:red">*</font></td>
+			<td>员工姓名</td><td><input type="text" name="username" value="${user.username}"><font style="color:red">*</font></td>
 		</tr>
 		<tr>
-			<td>手机号码</td><td><input type="text" name="phoneNumber" value="${employee.phoneNumber}"><font style="color:red">*</font></td>
+			<td>手机号码</td><td><input type="text" name="phoneNumber" value="${user.phoneNumber}"><font style="color:red">*</font></td>
 		</tr>
 		<tr>
-			<td>邮箱</td><td><input type="text" name="email" id="email" value="${employee.email}"><font style="color:red">*</font></td>
+			<td>邮箱</td><td><input type="text" name="email" id="email" value="${user.email}"><font style="color:red">*</font></td>
 		</tr>
 		<tr>
-			<td>部门</td><td><input type="text" name="department" id="department" value="${employee.department}"></td>
+			<td>部门</td><td><input type="text" name="department" id="department" value="${user.department}"></td>
 		</tr>
 		<tr>
-			<td>职位</td><td><input type="text" name="position" id="position" value="${employee.position}"></td>
+			<td>职位</td><td><input type="text" name="position" id="position" value="${user.position}"></td>
 		</tr>
 		<tr>
 			<td>设为管理员</td><td>  Yes<input type="radio" name="isAdmin" value="true" >No<input type="radio" name="isAdmin" checked="checked" value="false"></td>
 		</tr>
 </table>
-<input type="submit" value="添加" ><input type="button" value="取消" onclick="window.open('employee.do?method=mainPage','_self')">
+<input type="submit" value="添加" >
+<input type="button" value="取消" onclick="window.open('user.do?method=mainPage','_self')">
 </form>
 </body>
 </html>

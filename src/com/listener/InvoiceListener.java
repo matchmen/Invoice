@@ -8,16 +8,16 @@ import org.springframework.context.ApplicationListener;
 
 import com.dao.AuthorityDao;
 import com.dao.CompanyDao;
-import com.dao.CompanySettingInfoDao;
+import com.dao.BaseInfoDao;
 import com.dao.ContractDao;
-import com.dao.EmployeeDao;
+import com.dao.UserDao;
 import com.dao.InvoiceDao;
 import com.exception.BusinessException;
 import com.model.Authority;
 import com.model.Company;
-import com.model.CompanySettingInfo;
+import com.model.BaseInfo;
 import com.model.Email;
-import com.model.Employee;
+import com.model.User;
 import com.model.Invoice;
 import com.util.DateUtils;
 import com.util.SendEmail;
@@ -31,11 +31,11 @@ public class InvoiceListener implements ApplicationListener {
 	@Autowired
 	private CompanyDao companyDao;
 	@Autowired
-	private EmployeeDao employeeDao;
+	private UserDao userDao;
 	@Autowired
 	private ContractDao contractDao;
 	@Autowired
-	private CompanySettingInfoDao companySettingInfoDao;
+	private BaseInfoDao baseInfoDao;
 	
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
@@ -54,10 +54,10 @@ public class InvoiceListener implements ApplicationListener {
 		//遍历检索结果，根据检索结果找到相关负责人，并向负责人发提醒邮件
 		for (Invoice invoice : invoiceList) {
 			List<Authority> authList = authorityDao.findComIdByInvId(invoice.getInvId());
-			CompanySettingInfo comInfo = null;
+			BaseInfo comInfo = null;
 			if(null!=authList&&authList.size()>0){
 				Company com = companyDao.find(authList.get(0).getComId());
-				comInfo = companySettingInfoDao.findByCompanyCode(com.getCompanyCode());
+				comInfo = null;//BaseInfo.findByCompanyCode(com.getCompanyCode());
 			}else{
 				continue;
 			}
@@ -70,9 +70,9 @@ public class InvoiceListener implements ApplicationListener {
 					mail.setMailSmtpAuth("true");
 					mail.setMailSmtpHost("smtp.163.com");
 					for (Authority authority : authList) {
-						Employee emp = employeeDao.find(authority.getEmpId());
-						if(null!=emp){
-							mail.setRmailUser(emp.getEmail());
+						User user = userDao.find(authority.getEmpId());
+						if(null!=user){
+							mail.setRmailUser(user.getEmail());
 							try {
 								SendEmail.send(mail);
 							} catch (BusinessException e) {

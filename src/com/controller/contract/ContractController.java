@@ -25,7 +25,7 @@ import com.exception.BusinessException;
 import com.exception.ParameterException;
 import com.exception.SystemException;
 import com.model.Contract;
-import com.model.Employee;
+import com.model.User;
 import com.service.ContractService;
 
 @Controller
@@ -35,14 +35,14 @@ public class ContractController extends BaseController {
 	@Autowired
 	private ContractService contractService;
 	@Autowired
-	private String sourceUrl;
+	private Constants constants;
 	
 	@RequestMapping(params="method=addContractInfoManage")
 	public String addContractInfoManage(Admin admin,HttpSession httpSession) throws ParameterException{
 		
-		Employee employee = (Employee)httpSession.getAttribute("currEmployee");
+		User user = (User)httpSession.getAttribute("currUser");
 		
-		admin.setEmployee(employee);
+		admin.setUser(user);
 		
 		contractService.addContractInfoManage(admin);
 		
@@ -57,11 +57,11 @@ public class ContractController extends BaseController {
 	@RequestMapping(params="method=updateContractInfo")
 	public String updateContractInfo(ContractBean contractbean,Contract contract,ModelMap map,HttpSession httpSession) throws ParameterException, BusinessException{
 		
-		Employee employee = (Employee)httpSession.getAttribute("currEmployee");
+		User user = (User)httpSession.getAttribute("currUser");
 		
 		contractbean.setContract(contract);
 		
-		contractService.updateContract(contractbean,employee.getId());
+		contractService.updateContract(contractbean,user.getId());
 		
 		return "updateContractInfoSuccess";
 	}
@@ -69,9 +69,9 @@ public class ContractController extends BaseController {
 	@RequestMapping(params="method=findContractInfo")
 	public String findContractInfo(String contractIds,ModelMap map,HttpSession httpSession) throws ParameterException{
 		
-		Employee employee = (Employee)httpSession.getAttribute("currEmployee");
+		User user = (User)httpSession.getAttribute("currUser");
 		
-		ContractBean contractBean = contractService.findContract(contractIds,employee.getId());
+		ContractBean contractBean = contractService.findContract(contractIds,user.getId());
 		if(null==contractBean){
 			map.addAttribute("errorMsg", "查询信息不存在");
 		}else{
@@ -92,9 +92,9 @@ public class ContractController extends BaseController {
 	
 	@RequestMapping(params="method=checkContractInfo")
 	public String checkContractInfo(String contractId,ModelMap map,HttpSession httpSession) throws ParameterException{
-		Employee employee = (Employee)httpSession.getAttribute("currEmployee");
+		User user = (User)httpSession.getAttribute("currUser");
 		
-		ContractBean contractBean = contractService.findContract(contractId,employee.getId());
+		ContractBean contractBean = contractService.findContract(contractId,user.getId());
 		
 		if(null==contractBean){
 			map.addAttribute("errorMsg", "查询信息不存在");
@@ -112,11 +112,11 @@ public class ContractController extends BaseController {
 	@RequestMapping(params="method=importContractFile")
 	public String importContractFile(ContractBean contractBean,Contract contract, HttpSession httpSession) throws ParameterException, SystemException{
 		
-		Employee employee = (Employee)httpSession.getAttribute("currEmployee");
+		User user = (User)httpSession.getAttribute("currUser");
 		
 		contractBean.setContract(contract);
 		
-		contractService.preserveContract(contractBean,employee.getId());
+		contractService.preserveContract(contractBean,user.getId());
 		
 		return "importContractFileSuccess";
 	}
@@ -140,7 +140,7 @@ public class ContractController extends BaseController {
         response.setHeader("Content-Disposition", "attachment;filename="+new String(Constants.EXCEL_FILENAME.getBytes(),"iso-8859-1"));  
         //读取目标文件，通过response将目标文件写到客户端  
         //获取目标文件的绝对路径  
-        String fullFileName = sourceUrl+Constants.EXCEL_FILENAME;
+        String fullFileName = Constants.sourceUrl()+Constants.EXCEL_FILENAME;
         //读取文件  
         InputStream in;
         OutputStream out;

@@ -1,19 +1,19 @@
 package com.bean;
 
-import com.model.Employee;
+import com.model.User;
 import com.model.Invoice;
 
 public class InvoiceBean {
 
-	private Employee emplpoyee;
+	private User emplpoyee;
 
 	private Invoice invoice;
 
-	public Employee getEmplpoyee() {
+	public User getEmplpoyee() {
 		return emplpoyee;
 	}
 
-	public void setEmplpoyee(Employee emplpoyee) {
+	public void setEmplpoyee(User emplpoyee) {
 		this.emplpoyee = emplpoyee;
 	}
 

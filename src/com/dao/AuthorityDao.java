@@ -8,7 +8,7 @@ public interface AuthorityDao {
 
 	public void addCon(Authority authority); 
 	
-	public void removeCon(Integer id);
+	public void removeCon(Integer id,Integer comId);
 	
 	public void updateCon(Authority authority);
 	
@@ -18,7 +18,7 @@ public interface AuthorityDao {
 	
 	public void addInv(Authority authority); 
 	
-	public void removeInv(Integer id);
+	public void removeInv(Integer id,Integer comId);
 	
 	public void updateInv(Authority authority);
 	

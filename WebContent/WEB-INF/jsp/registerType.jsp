@@ -7,11 +7,11 @@
 <title>注册类型</title>
 </head>
 <body>
-<form action="company.do?method=registerType" method="post">
-	个人注册<input type="checkbox" name="isComapny" value="false" >
-	公司注册<input type="checkbox" name="isComapny" value="true">
+<form action="user.do?method=registerType" method="post">
+	个人注册<input type="checkbox" name="isCompany" value="false" >
+	公司注册<input type="checkbox" name="isCompany" value="true"><br>
 	<input type="submit" value="下一步">
-	<input type="button" value="取消" onclick="window.open('employee.do?method=loginPage','_self')">
+	<input type="button" value="取消" onclick="window.open('user.do?method=loginPage','_self')">
 </form>
 </body>
 </html>

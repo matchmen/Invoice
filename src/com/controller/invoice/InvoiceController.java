@@ -11,7 +11,7 @@ import com.bean.InvoiceBean;
 import com.controller.BaseController;
 import com.exception.BusinessException;
 import com.exception.ParameterException;
-import com.model.Employee;
+import com.model.User;
 import com.model.Invoice;
 import com.service.InvoiceService;
 import com.util.StringUtils;
@@ -36,7 +36,7 @@ public class InvoiceController extends BaseController {
 			throw new ParameterException("updateInvoiceInfo", "", "发票编号不能为空", null, "");
 		}
 		
-		Employee emp = (Employee)session.getAttribute("currEmployee");
+		User emp = (User)session.getAttribute("currEmployee");
 		
 		Invoice invoice = invoiceService.checkInvoiceInfo(invoId, emp.getId());
 		
@@ -52,7 +52,7 @@ public class InvoiceController extends BaseController {
 	@RequestMapping(params="method=checkInvoiceInfo")
 	public String checkInvoiceInfo(String invoiceId,HttpSession session,ModelMap map) throws ParameterException{
 		
-		Employee emp = (Employee)session.getAttribute("currEmployee");
+		User emp = (User)session.getAttribute("currUser");
 		
 		Invoice invoice = invoiceService.checkInvoiceInfo(invoiceId, emp.getId());
 		
@@ -73,7 +73,7 @@ public class InvoiceController extends BaseController {
 	@RequestMapping(params="method=updateInvoiceInfo")
 	public String updateInvoiceInfo(Invoice invoice,HttpSession session) throws BusinessException, ParameterException{
 		
-		Employee emp = (Employee)session.getAttribute("currEmployee");
+		User emp = (User)session.getAttribute("currUser");
 		
 		invoiceService.updateInvoiceInfo(invoice, emp.getId());
 		
@@ -83,7 +83,7 @@ public class InvoiceController extends BaseController {
 	@RequestMapping(params="method=addInvoice")
 	public String addInvoice(Invoice invoice,HttpSession session) throws BusinessException, ParameterException{
 		
-		Employee emp = (Employee)session.getAttribute("currEmployee");
+		User emp = (User)session.getAttribute("currUser");
 		
 		InvoiceBean bean = new InvoiceBean();
 		

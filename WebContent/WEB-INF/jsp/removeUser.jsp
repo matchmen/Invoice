@@ -11,14 +11,14 @@
 <body onload="errSetting()">
 <font style="color:red">${errorMsg}</font>
 <input  type="hidden"  id="errorMsg" value="${errorElementId}">
-<form action="employee.do?method=removeEmployee" method="post">
+<form action="user.do?method=removeUser" method="post">
 <table>
 	<tr>
 		<td>邮箱或手机号码</td><td><input type="text" name="str" id="str"></td>
 	</tr>
 </table>
 <input type="submit" value="注销" >
-<input type="button" value="取消" onclick="window.open('employee.do?method=mainPage','_self')"><br>
+<input type="button" value="取消" onclick="window.open('user.do?method=mainPage','_self')"><br>
 </form>
 </body>
 </html>

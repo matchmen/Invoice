@@ -1,6 +1,6 @@
 package com.model;
 
-public class Employee {
+public class User {
 	/**
 	 * ID
 	 */
@@ -12,7 +12,7 @@ public class Employee {
 	/**
 	 * 姓名
 	 */
-	private String employeeName;
+	private String username;
 	/**
 	 * 电话
 	 */
@@ -53,7 +53,7 @@ public class Employee {
 	 * 个人还是公司
 	 */
 	private Boolean isCompany;
-	
+
 	public Boolean getIsCompany() {
 		return isCompany;
 	}
@@ -110,12 +110,12 @@ public class Employee {
 		this.employeeId = employeeId;
 	}
 
-	public String getEmployeeName() {
-		return employeeName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setEmployeeName(String employeeName) {
-		this.employeeName = employeeName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPhoneNumber() {

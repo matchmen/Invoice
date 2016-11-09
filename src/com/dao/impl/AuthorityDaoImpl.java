@@ -26,9 +26,9 @@ public class AuthorityDaoImpl extends DaoJdbcTemplate implements AuthorityDao {
 	}
 
 	@Override
-	public void removeCon(Integer id) {
-		String sql = "update  t_con_com_emp set ABLED = 0 where ID = ?";
-		getJdbcTempalte().update(sql,new Object[]{id});
+	public void removeCon(Integer id,Integer comId) {
+		String sql = "update  t_con_com_emp set ABLED = 0 where ID = ? and COM_ID = ?";
+		getJdbcTempalte().update(sql,new Object[]{id,comId});
 	}
 
 	@Override
@@ -79,9 +79,9 @@ public class AuthorityDaoImpl extends DaoJdbcTemplate implements AuthorityDao {
 	}
 
 	@Override
-	public void removeInv(Integer id) {
-		String sql = "update  t_com_emp_inv set ABLED = 0 where ID = ?";
-		getJdbcTempalte().update(sql,new Object[]{id});
+	public void removeInv(Integer id,Integer comId) {
+		String sql = "update  t_com_emp_inv set ABLED = 0 where ID = ? and COM_ID = ?";
+		getJdbcTempalte().update(sql,new Object[]{id,comId});
 	
 	}
 

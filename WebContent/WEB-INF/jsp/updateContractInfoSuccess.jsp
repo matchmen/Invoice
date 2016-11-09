@@ -7,6 +7,6 @@
 <title>保存成功</title>
 </head>
 <body>
-	保存成功! <a href="employee.do?method=mainPage">返回主界面</a>
+	保存成功! <a href="user.do?method=mainPage">返回主界面</a>
 </body>
 </html>

@@ -9,14 +9,14 @@ import com.bean.InvoiceBean;
 import com.dao.AuthorityDao;
 import com.dao.CompanyDao;
 import com.dao.ContractDao;
-import com.dao.EmployeeDao;
+import com.dao.UserDao;
 import com.dao.InvoiceDao;
 import com.exception.BusinessException;
 import com.exception.ParameterException;
 import com.model.Authority;
 import com.model.Company;
 import com.model.Contract;
-import com.model.Employee;
+import com.model.User;
 import com.model.Invoice;
 import com.service.InvoiceService;
 import com.util.StringUtils;
@@ -30,7 +30,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 	@Autowired
 	private CompanyDao companyDao;
 	@Autowired
-	private EmployeeDao employeeDao;
+	private UserDao userDao;
 	@Autowired
 	private ContractDao contractDao;
 	
@@ -90,7 +90,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 				return false;
 			}
 			
-			Employee emp = employeeDao.find(empId);
+			User emp = userDao.find(empId);
 			
 			if(null==emp){
 				return false;
@@ -139,7 +139,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 				return false;
 			}
 			
-			Employee emp = employeeDao.find(empid);
+			User emp = userDao.find(empid);
 			
 			if(null==emp){
 				return false;

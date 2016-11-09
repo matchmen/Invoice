@@ -20,7 +20,7 @@ function errSetting(){
 <body onload="errSetting()">
 <font style="color:red">${errorMsg}</font>
 <input  type="hidden"  id="errorMsg" value="${errorElementId}">
-<form action="employee.do?method=updatePassword" method="post">
+<form action="user.do?method=updatePassword" method="post">
 	<table>
 		<tr>
 			<td>旧密码</td><td><input type="password" name="oldPassword" id="oldPassword"></td>
@@ -33,7 +33,7 @@ function errSetting(){
 		</tr>
 	</table>
 	<input type="submit" value="修改" >
-	<input type="button" value="取消" onclick="window.open('employee.do?method=mainPage','_self')">
+	<input type="button" value="取消" onclick="window.open('user.do?method=mainPage','_self')">
 </form>
 </body>
 </html>

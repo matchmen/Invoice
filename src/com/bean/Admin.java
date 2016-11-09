@@ -1,12 +1,12 @@
 package com.bean;
 
-import com.model.Employee;
+import com.model.User;
 
 public class Admin {
 
 	private String str;
 	
-	private Employee employee;  
+	private User user;  
 	
 	private String comId;
 	
@@ -16,12 +16,12 @@ public class Admin {
 	
 	private Boolean isAll;
 	
-	public Employee getEmployee() {
-		return employee;
+	public User getUser() {
+		return user;
 	}
 
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Boolean getIsAll() {

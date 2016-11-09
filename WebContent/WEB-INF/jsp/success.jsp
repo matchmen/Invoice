@@ -7,6 +7,6 @@
 <title>成功</title>
 </head>
 <body>
-操作成功!<a href="employee.do?method=mainPage">回到主页</a>
+操作成功!<a href="user.do?method=mainPage">回到主页</a>
 </body>
 </html>

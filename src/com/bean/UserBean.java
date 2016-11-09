@@ -3,8 +3,8 @@ package com.bean;
 import com.model.Company;
 import com.model.User;
 
-public class CompanyBean {
-	
+public class UserBean {
+
 	private User user;
 	
 	private Company company;
@@ -24,4 +24,5 @@ public class CompanyBean {
 	public void setCompany(Company company) {
 		this.company = company;
 	}
+	
 }

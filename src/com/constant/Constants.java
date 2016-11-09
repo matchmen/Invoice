@@ -3,10 +3,28 @@ package com.constant;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.util.StringUtils;
 
 public class Constants {
+	
+	@Autowired
+	private static Constants constants;
+	
+	private String sourceUrl;
+	
+	public String getSourceUrl() {
+		return sourceUrl;
+	}
+	public void setSourceUrl(String sourceUrl) {
+		this.sourceUrl = sourceUrl;
+	}
 
+	public static String sourceUrl(){
+		return constants.getSourceUrl();
+	}
+	
 	/**
 	 * yyyy/MM/dd
 	 */
@@ -153,6 +171,8 @@ public class Constants {
 		}
 		return "";
 	}
-	
+	/**
+	 * 下载合同模板名称
+	 */
 	public static String EXCEL_FILENAME = "合同信息表.xlsx";
 }

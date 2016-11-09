@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.model.Employee;
+import com.model.User;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
@@ -26,10 +26,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse reponse,
 			Object arg2) throws Exception {
-		Employee currE = (Employee)request.getSession().getAttribute("currEmployee");
+		User currE = (User)request.getSession().getAttribute("currUser");
 		String url = request.getParameter("method");
-		if(null==currE&&!(url.equals("register")||url.equals("registerPage")||url.equals("loginPage")||url.equals("login"))){
-			reponse.sendRedirect("employee.do?method=loginPage");
+		if(null==currE&&!(url.equals("register")||url.equals("registerTypePage")||url.equals("loginPage")||url.equals("login")||url.equals("registerType"))){
+			reponse.sendRedirect("user.do?method=loginPage");
 			return false;
 		}else{
 			return true;

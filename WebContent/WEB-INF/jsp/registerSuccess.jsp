@@ -7,6 +7,6 @@
 <title>注册成功</title>
 </head>
 <body>
-恭喜你注册成功！<a href="user.do?method=loginPage">回到登录界面。</a>
+恭喜你注册成功！<a href="user.do?method=login">返回登陆</a>
 </body>
 </html>

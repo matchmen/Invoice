@@ -7,11 +7,11 @@ import com.model.User;
 
 public interface UserDao {
 	
-	public void add(User employee) throws SystemException ;
+	public void add(User user) throws SystemException ;
 	
 	public void remove(Integer id);
 	
-	public void update(User employee);
+	public void update(User user);
 	
 	public User find(Integer id);
 	

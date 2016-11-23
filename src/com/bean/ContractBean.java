@@ -6,11 +6,20 @@ import com.model.Contract;
 import com.model.Invoice;
 
 public class ContractBean {
-
 	
 	private Contract contract;
 	
 	private List<Invoice> invoiceList;
+	
+	private List<Contract> contractList;
+
+	public List<Contract> getContractList() {
+		return contractList;
+	}
+
+	public void setContractList(List<Contract> contractList) {
+		this.contractList = contractList;
+	}
 
 	public Contract getContract() {
 		return contract;

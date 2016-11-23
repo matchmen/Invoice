@@ -21,14 +21,8 @@
 			<td>添加人邮箱或手机号码</td>
 			<td><input type="text" name="str" id="str" value="${admin.str}"></td>
 		</tr>
-		<!-- <tr>
-			<td>同时绑定该合同下所有发票的管理权限</td>
-			<td>  Yes<input type="radio" name="isAll" value="true" >
-				  No<input type="radio" name="isAdmin" checked="checked" value="false"></td>
-		</tr> -->
 	</table>
 	<input type="submit" value="添加" >
-	<input type="button" value="取消" onclick="window.open('employee.do?method=mainPage','_self')"><br>
 </form>
 </body>
 </html>

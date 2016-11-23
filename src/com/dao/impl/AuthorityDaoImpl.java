@@ -15,7 +15,7 @@ public class AuthorityDaoImpl extends DaoJdbcTemplate implements AuthorityDao {
 
 	@Override
 	public void addCon(Authority authority) {
-		StringBuffer sb = new StringBuffer("insert into t_con_com_emp(CON_ID,COM_ID,EMP_ID) VALUES(")
+		StringBuffer sb = new StringBuffer("insert into t_com_user_con(CON_ID,COM_ID,USER_ID) VALUES(")
 		.append(authority.getConId())
 		.append(",")
 		.append(authority.getComId())
@@ -27,13 +27,13 @@ public class AuthorityDaoImpl extends DaoJdbcTemplate implements AuthorityDao {
 
 	@Override
 	public void removeCon(Integer id,Integer comId) {
-		String sql = "update  t_con_com_emp set ABLED = 0 where ID = ? and COM_ID = ?";
+		String sql = "update  t_com_user_con set ABLED = 0 where ID = ? and COM_ID = ?";
 		getJdbcTempalte().update(sql,new Object[]{id,comId});
 	}
 
 	@Override
 	public void updateCon(Authority authority) {
-		String sql = "update t_con_com_emp set COM_ID = ? ,CON_ID=?,EMP_ID=? WHERE ID = ?";
+		String sql = "update t_com_user_con set COM_ID = ? ,CON_ID=?,USER_ID=? WHERE ID = ?";
 		getJdbcTempalte().update(sql, new Object[]{
 				authority.getComId(),
 				authority.getConId(),
@@ -42,7 +42,7 @@ public class AuthorityDaoImpl extends DaoJdbcTemplate implements AuthorityDao {
 
 	@Override
 	public Authority findCon(Authority authority) {
-		String sql ="select * from t_con_com_emp where COM_ID = ? and CON_ID = ? and EMP_ID = ? and ABLED = 1";
+		String sql ="select * from t_com_user_con where COM_ID = ? and CON_ID = ? and USER_ID = ? and ABLED = 1";
 		List<Authority> authorityList = getJdbcTempalte().query(sql, new Object[]{
 				authority.getComId(), 
 				authority.getConId(),
@@ -54,7 +54,7 @@ public class AuthorityDaoImpl extends DaoJdbcTemplate implements AuthorityDao {
 						Authority authority = new Authority();
 						authority.setComId(rs.getInt("COM_ID"));
 						authority.setConId(rs.getInt("CON_ID"));
-						authority.setEmpId(rs.getInt("EMP_ID"));
+						authority.setEmpId(rs.getInt("USER_ID"));
 						authority.setId(rs.getInt("ID"));
 						authority.setAbled(rs.getBoolean("ABLED"));
 						return authority;
@@ -68,7 +68,7 @@ public class AuthorityDaoImpl extends DaoJdbcTemplate implements AuthorityDao {
 
 	@Override
 	public void addInv(Authority authority) {
-		StringBuffer sb = new StringBuffer("insert into t_com_emp_inv(INV_ID,COM_ID,EMP_ID) VALUES(")
+		StringBuffer sb = new StringBuffer("insert into t_com_user_inv(INV_ID,COM_ID,USER_ID) VALUES(")
 		.append(authority.getInvId())
 		.append(",")
 		.append(authority.getComId())
@@ -80,7 +80,7 @@ public class AuthorityDaoImpl extends DaoJdbcTemplate implements AuthorityDao {
 
 	@Override
 	public void removeInv(Integer id,Integer comId) {
-		String sql = "update  t_com_emp_inv set ABLED = 0 where ID = ? and COM_ID = ?";
+		String sql = "update  t_com_user_inv set ABLED = 0 where ID = ? and COM_ID = ?";
 		getJdbcTempalte().update(sql,new Object[]{id,comId});
 	
 	}
@@ -88,7 +88,7 @@ public class AuthorityDaoImpl extends DaoJdbcTemplate implements AuthorityDao {
 	@Override
 	public void updateInv(Authority authority) {
 
-		String sql = "update t_com_emp_inv set com_ID = ? ,inv_ID=?,EMP_ID=? WHERE ID = ?";
+		String sql = "update t_com_user_inv set com_ID = ? ,inv_ID=?,USER_ID=? WHERE ID = ?";
 		getJdbcTempalte().update(sql, new Object[]{
 				authority.getInvId(),
 				authority.getConId(),
@@ -98,7 +98,7 @@ public class AuthorityDaoImpl extends DaoJdbcTemplate implements AuthorityDao {
 
 	@Override
 	public Authority findInv(Authority authority) {
-		String sql ="select * from t_com_emp_inv where com_ID = ? and INV_ID = ? and EMP_ID = ? and ABLED = 1";
+		String sql ="select * from t_com_user_inv where com_ID = ? and INV_ID = ? and USER_ID = ? and ABLED = 1";
 		List<Authority> authorityList = getJdbcTempalte().query(sql, new Object[]{
 				authority.getComId(), 
 				authority.getInvId(),
@@ -110,7 +110,7 @@ public class AuthorityDaoImpl extends DaoJdbcTemplate implements AuthorityDao {
 						Authority authority = new Authority();
 						authority.setComId(rs.getInt("COM_ID"));
 						authority.setConId(rs.getInt("INV_ID"));
-						authority.setEmpId(rs.getInt("EMP_ID"));
+						authority.setEmpId(rs.getInt("USER_ID"));
 						authority.setId(rs.getInt("ID"));
 						authority.setAbled(rs.getBoolean("ABLED"));
 						return authority;
@@ -124,7 +124,7 @@ public class AuthorityDaoImpl extends DaoJdbcTemplate implements AuthorityDao {
 
 	@Override
 	public List<Integer> findConByEmpId(Integer empId) {
-		String sql = "select ID from t_con_com_emp where EMP_ID = ? and ABLED = 1";
+		String sql = "select ID from t_com_user_con where USER_ID = ? and ABLED = 1";
 		
 		return getJdbcTempalte().query(sql, new Object[]{empId},new RowMapper<Integer>(){
 

@@ -45,7 +45,6 @@ function errSetting(){
 		</c:if>		
 		</table>
 		<input type="submit" value="保存">
-		<input type="button" value="取消" onclick="window.open('user.do?method=mainPage','_self')">
 	</form>
 </body>
 </html>

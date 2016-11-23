@@ -12,19 +12,6 @@ public class Constants {
 	@Autowired
 	private static Constants constants;
 	
-	private String sourceUrl;
-	
-	public String getSourceUrl() {
-		return sourceUrl;
-	}
-	public void setSourceUrl(String sourceUrl) {
-		this.sourceUrl = sourceUrl;
-	}
-
-	public static String sourceUrl(){
-		return constants.getSourceUrl();
-	}
-	
 	/**
 	 * yyyy/MM/dd
 	 */
@@ -148,7 +135,7 @@ public class Constants {
 			invoiceStatusMap.put(invoiceStatus_12, invoiceStatus_str_12);
 			return invoiceStatusMap.get(num);
 		}
-		return "";
+		return invoiceStatus_str_01;
 	}
 	/**
 	 * 中文转为数字
@@ -169,10 +156,66 @@ public class Constants {
 			invoiceStatusMap.put(invoiceStatus_str_12, invoiceStatus_12);
 			return invoiceStatusMap.get(str);
 		}
-		return "";
+		return invoiceStatus_01;
 	}
 	/**
 	 * 下载合同模板名称
 	 */
 	public static String EXCEL_FILENAME = "合同信息表.xlsx";
+	/**
+	 * 下载发票模板名称
+	 */
+	public static String EXCEL_FILENAME_INVOICE = "发票信息表.xlsx";
+	/**
+	 * 发票类型_专用发票
+	 */
+	public static String SPECIAL_INVOICE_STR = "专用发票";
+	/**
+	 * 发票类型_普通发票
+	 */
+	public static String PLAIN_INVOICE_STR = "普通发票";
+	/**
+	 * 发票类型_专用发票
+	 */
+	public static String SPECIAL_INVOICE_NUM = "1";
+	/**
+	 * 发票类型_普通发票
+	 */
+	public static String PLAIN_INVOICE_NUM = "2";
+	/**
+	 * 发票类型number→String
+	 * @param num
+	 * @return
+	 */
+	public static String parseToStr(String num){
+		
+		if(StringUtils.isSpace(num)){
+			return "";
+		}
+		
+		Map<String,String> invoiceType = new HashMap<String,String>(); 
+		
+		invoiceType.put(SPECIAL_INVOICE_NUM, SPECIAL_INVOICE_STR);
+		invoiceType.put(PLAIN_INVOICE_NUM, PLAIN_INVOICE_STR);
+		
+		return invoiceType.get(num);
+	}
+	/**
+	 * 发票类型String→number
+	 * @param num
+	 * @return
+	 */
+	public static String parseToNum(String str){
+		
+		if(StringUtils.isSpace(str)){
+			return "";
+		}
+		
+		Map<String,String> invoiceType = new HashMap<String,String>(); 
+		
+		invoiceType.put(SPECIAL_INVOICE_STR,SPECIAL_INVOICE_NUM);
+		invoiceType.put(PLAIN_INVOICE_STR,PLAIN_INVOICE_NUM);
+		
+		return invoiceType.get(str);
+	}
 }

@@ -1,20 +1,32 @@
 package com.bean;
 
+import java.util.List;
+
 import com.model.User;
 import com.model.Invoice;
 
 public class InvoiceBean {
 
-	private User emplpoyee;
+	private User user;
 
 	private Invoice invoice;
-
-	public User getEmplpoyee() {
-		return emplpoyee;
+	
+	private List<Invoice> invoiceList;
+	
+	public List<Invoice> getInvoiceList() {
+		return invoiceList;
 	}
 
-	public void setEmplpoyee(User emplpoyee) {
-		this.emplpoyee = emplpoyee;
+	public void setInvoiceList(List<Invoice> invoiceList) {
+		this.invoiceList = invoiceList;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Invoice getInvoice() {

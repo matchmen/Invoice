@@ -21,14 +21,14 @@ function uploadfile(){
 <font style="color:red">${errorMsg}</font>
 <input  type="hidden"  id="errorMsg" value="${errorElementId}">
 <form id="formId" method="post"  action="contract.do?method=importContractFile">
-<c:if test="${empty contract}">
+<c:if test="${empty contractBean}">
 	<input type="file"  id="uploadedfile" name="file" onchange="uploadfile()" accept=".xlsx" ><br>
 	<a href="contract.do?method=downloadExcel" >下载合同模板</a>
 	<br>
 </c:if>
-<c:if test="${!empty contract}">
+<c:if test="${!empty contractBean}">
 <table>
-<tr>
+	<tr>
 		<td>合同编号</td>
 		<td>合同类型</td>
 		<td>产品和服务</td>
@@ -49,27 +49,27 @@ function uploadfile(){
 		<td>备注</td>
 	</tr>
 	<tr>
-		<td><input type="text" name="contractId" value="${contract.contractId}" id="contractId"></td>
-   		<td><input type="text" name="contractType" value="${contract.contractType}" id="contractType"></td>
-		<td><input type="text" name="itemName" value="${contract.itemName}" id="itemName"></td>
-		<td><input type="text" name="companyNameOfFirst" value="${contract.companyNameOfFirst}" id="companyNameOfFirst"></td>
-		<td><input type="text" name="contactNameOfFirst" value="${contract.contactNameOfFirst}" id="contactNameOfFirst"></td>
-		<td><input type="text" name="companyNameOfSecond" value="${contract.companyNameOfSecond}" id="companyNameOfSecond"></td>
-   		<td><input type="text" name="contactNameOfSecond" value="${contract.sales}" id="contactNameOfSecond"></td>
-  		<td><input type="text" name="companyNameOfThird" value="${contract.companyNameOfThird}" id="companyNameOfThird"></td>
-		<td><input type="text" name="contactNameOfThird" value="${contract.contactNameOfThird}" id="contactNameOfThird"></td>
-  		<td><input type="text" name="contractSignDate" value="${contract.contractSignDate}" id="contractSignDate"></td>
- 		<td><input type="text" name="contractStartDate" value="${contract.contractStartDate}" id="contractStartDate"></td>
- 		<td><input type="text" name="contractEndDate" value="${contract.contractEndDate}" id="contractEndDate"></td>
-   		<td><input type="text" name="amt" value="${contract.amt}" id="amt"></td>
-   		<td><input type="text" name="paymentTimes" value="${contract.paymentTimes}" id="paymentTimes"></td>
-   		<td><input type="text" name="comleteInvoiceNumber" value="${contract.comleteInvoiceNumber}" id="comleteInvoiceNumber"></td>
-		<td><input type="text" name="completeInvoiceAmt" value="${contract.completeInvoiceAmt}" id="completeInvoiceAmt"></td>
-		<td><input type="text" name="remainInvoiceAmt" value="${contract.remainInvoiceAmt}" id="remainInvoiceAmt"></td>
-    	<td><input type="text" name="remark" value="${contract.remark}" id="remark"></td>
+		<td><input type="text" name="contractId" value="${contractBean.contract.contractId}" id="contractId"></td>
+   		<td><input type="text" name="contractType" value="${contractBean.contract.contractType}" id="contractType"></td>
+		<td><input type="text" name="itemName" value="${contractBean.contract.itemName}" id="itemName"></td>
+		<td><input type="text" name="companyNameOfFirst" value="${contractBean.contract.companyNameOfFirst}" id="companyNameOfFirst"></td>
+		<td><input type="text" name="contactNameOfFirst" value="${contractBean.contract.contactNameOfFirst}" id="contactNameOfFirst"></td>
+		<td><input type="text" name="companyNameOfSecond" value="${contractBean.contract.companyNameOfSecond}" id="companyNameOfSecond"></td>
+   		<td><input type="text" name="contactNameOfSecond" value="${contractBean.contract.sales}" id="contactNameOfSecond"></td>
+  		<td><input type="text" name="companyNameOfThird" value="${contractBean.contract.companyNameOfThird}" id="companyNameOfThird"></td>
+		<td><input type="text" name="contactNameOfThird" value="${contractBean.contract.contactNameOfThird}" id="contactNameOfThird"></td>
+  		<td><input type="text" name="contractSignDate" value="${contractBean.contract.contractSignDate}" id="contractSignDate"></td>
+ 		<td><input type="text" name="contractStartDate" value="${contractBean.contract.contractStartDate}" id="contractStartDate"></td>
+ 		<td><input type="text" name="contractEndDate" value="${contractBean.contract.contractEndDate}" id="contractEndDate"></td>
+   		<td><input type="text" name="amt" value="${contractBean.contract.amt}" id="amt"></td>
+   		<td><input type="text" name="paymentTimes" value="${contractBean.contract.paymentTimes}" id="paymentTimes"></td>
+   		<td><input type="text" name="comleteInvoiceNumber" value="${contractBean.contract.comleteInvoiceNumber}" id="comleteInvoiceNumber"></td>
+		<td><input type="text" name="completeInvoiceAmt" value="${contractBean.contract.completeInvoiceAmt}" id="completeInvoiceAmt"></td>
+		<td><input type="text" name="remainInvoiceAmt" value="${contractBean.contract.remainInvoiceAmt}" id="remainInvoiceAmt"></td>
+    	<td><input type="text" name="remark" value="${contractBean.contract.remark}" id="remark"></td>
 	
 </table>
-<c:if test="${!empty invoiceList}">
+<c:if test="${!empty contractBean.invoiceList}">
 <font>开票信息</font>
 <table>
 	<tr>
@@ -96,7 +96,7 @@ function uploadfile(){
 		<td>收件地址</td>
 		<td>收件人电话</td>
 	</tr>
-	<c:forEach items="${invoiceList}" var="item">
+	<c:forEach items="${contractBean.invoiceList}" var="item">
 	<tr>
 		<td><input type="text" name="invoiceList[${item.invoiceIndex-1}].invoiceIndex" id="invoiceIndex" value="${item.invoiceIndex}" ></td>
 	    <td><input type="text" name="invoiceList[${item.invoiceIndex-1}].invoiceStatus" id="invoiceStatus" value="${item.invoiceStatus}" ></td>
@@ -126,7 +126,6 @@ function uploadfile(){
 </c:if>
 <input type="submit" value="导入系统" >
 </c:if>
-<input type="button" value="取消" onclick="window.open('employee.do?method=mainPage','_self')"><br>
 </form>
 </body>
 </html>

@@ -76,7 +76,7 @@ public class UserContreller extends BaseController {
 		
 		session.removeAttribute("currUser");
 		
-		return "updatePasswordSuccess";
+		return "login";
 	}
 	@RequestMapping(params="method=updateUserInfo")
 	public String updateUserInfo(HttpSession session,ModelMap map,User user) throws ParameterException, SystemException{

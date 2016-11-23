@@ -5,13 +5,20 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>注册类型</title>
+<style type="text/css">
+body {
+	background:#D2E0F2;
+}
+
+</style>
 </head>
 <body>
 <form action="user.do?method=registerType" method="post">
-	个人注册<input type="checkbox" name="isCompany" value="false" >
-	公司注册<input type="checkbox" name="isCompany" value="true"><br>
+<div style="margin-left: 40%;margin-top: 20%;">
+	个人注册<input type="radio" name="isCompany" checked="checked" value="false" >
+	公司注册<input type="radio" name="isCompany" value="true">
 	<input type="submit" value="下一步">
-	<input type="button" value="取消" onclick="window.open('user.do?method=loginPage','_self')">
+</div>
 </form>
 </body>
 </html>

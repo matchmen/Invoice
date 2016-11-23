@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.core.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -34,8 +33,6 @@ public class ContractController extends BaseController {
 	
 	@Autowired
 	private ContractService contractService;
-	@Autowired
-	private Constants constants;
 	
 	@RequestMapping(params="method=addContractInfoManage")
 	public String addContractInfoManage(Admin admin,HttpSession httpSession) throws ParameterException{
@@ -44,7 +41,7 @@ public class ContractController extends BaseController {
 		
 		admin.setUser(user);
 		
-		contractService.addContractInfoManage(admin);
+		contractService.addContractInfoManage(admin,user);
 		
 		return "addContractInfoManageSuccess";
 	}
@@ -66,19 +63,19 @@ public class ContractController extends BaseController {
 		return "updateContractInfoSuccess";
 	}
 	
-	@RequestMapping(params="method=findContractInfo")
-	public String findContractInfo(String contractIds,ModelMap map,HttpSession httpSession) throws ParameterException{
+	@RequestMapping(params="method=findConAndInvList2")
+	public String findConAndInvList2(HttpServletRequest request,ModelMap map,HttpSession httpSession) throws ParameterException{
 		
 		User user = (User)httpSession.getAttribute("currUser");
 		
-		ContractBean contractBean = contractService.findContract(contractIds,user.getId());
+		String conId = request.getParameter("contractIds");
+		
+		ContractBean contractBean = contractService.findContract(conId,user.getId());
+		
 		if(null==contractBean){
 			map.addAttribute("errorMsg", "查询信息不存在");
 		}else{
-			if(null!=contractBean.getContract())
-				map.addAttribute("contract", contractBean.getContract());
-			if(null!=contractBean.getInvoiceList())
-			map.addAttribute("invoiceList", contractBean.getInvoiceList());
+			map.addAttribute("contractBean", contractBean);
 		}
 		
 		return "updateContractInfo";
@@ -90,24 +87,58 @@ public class ContractController extends BaseController {
 		return "updateContractInfo";
 	}
 	
-	@RequestMapping(params="method=checkContractInfo")
-	public String checkContractInfo(String contractId,ModelMap map,HttpSession httpSession) throws ParameterException{
+	@RequestMapping(params="method=findCheck")
+	public String findCheck(String contractName,String firstName,String signDateStart,String signDateEnd,ModelMap map,HttpSession httpSession) throws ParameterException{
+		
 		User user = (User)httpSession.getAttribute("currUser");
 		
-		ContractBean contractBean = contractService.findContract(contractId,user.getId());
+		ContractBean contractBean = contractService.findContractList(contractName,firstName,signDateStart,signDateEnd,user);
 		
-		if(null==contractBean){
+		if(null==contractBean||null==contractBean.getContractList()||contractBean.getContractList().size()<1){
 			map.addAttribute("errorMsg", "查询信息不存在");
 		}else{
-			if(null!=contractBean.getContract()){
-				map.addAttribute("contract", contractBean.getContract());
-				if(null!=contractBean.getInvoiceList())
-					map.addAttribute("invoiceList", contractBean.getInvoiceList());
-			}
+			map.addAttribute("contractBean", contractBean);
 		}
+		map.addAttribute("contractName", contractName);
+		map.addAttribute("firstName", firstName);
+		map.addAttribute("signDateStart", signDateStart);
+		map.addAttribute("signDateEnd", signDateEnd);
 		
 		return "checkContractInfo";
 	}
+	@RequestMapping(params="method=findUpdate")
+	public String findUpdate(String contractName,String firstName,String signDateStart,String signDateEnd,ModelMap map,HttpSession httpSession) throws ParameterException{
+		
+		User user = (User)httpSession.getAttribute("currUser");
+		
+		ContractBean contractBean = contractService.findContractList(contractName,firstName,signDateStart,signDateEnd,user);
+		
+		if(null==contractBean||null==contractBean.getContractList()||contractBean.getContractList().size()<1){
+			map.addAttribute("errorMsg", "查询信息不存在");
+		}else{
+			map.addAttribute("contractBean", contractBean);
+		}
+		map.addAttribute("contractName", contractName);
+		map.addAttribute("firstName", firstName);
+		map.addAttribute("signDateStart", signDateStart);
+		map.addAttribute("signDateEnd", signDateEnd);
+		
+		return "updateContractInfo";
+	}
+	@RequestMapping(params="method=findConAndInvList1")
+	public String findConAndInvList1(HttpSession httpSession,ModelMap map,HttpServletRequest request) throws ParameterException{
+		
+		User user = (User)httpSession.getAttribute("currUser");
+		
+		String contractId = request.getParameter("contractId");
+		
+		ContractBean bean = contractService.findContract(contractId, user.getId());
+		
+		map.addAttribute("contractBean", bean);
+		
+		return "checkContractInfo";
+	}
+	
 
 	@RequestMapping(params="method=importContractFile")
 	public String importContractFile(ContractBean contractBean,Contract contract, HttpSession httpSession) throws ParameterException, SystemException{
@@ -116,7 +147,7 @@ public class ContractController extends BaseController {
 		
 		contractBean.setContract(contract);
 		
-		contractService.preserveContract(contractBean,user.getId());
+		contractService.preserveContract(contractBean,user);
 		
 		return "importContractFileSuccess";
 	}
@@ -140,7 +171,7 @@ public class ContractController extends BaseController {
         response.setHeader("Content-Disposition", "attachment;filename="+new String(Constants.EXCEL_FILENAME.getBytes(),"iso-8859-1"));  
         //读取目标文件，通过response将目标文件写到客户端  
         //获取目标文件的绝对路径  
-        String fullFileName = Constants.sourceUrl()+Constants.EXCEL_FILENAME;
+        String fullFileName = req.getSession().getServletContext().getRealPath("/download/"+Constants.EXCEL_FILENAME);
         //读取文件  
         InputStream in;
         OutputStream out;
@@ -171,9 +202,9 @@ public class ContractController extends BaseController {
 		
 		ContractBean contractBean = contractService.getContractInfo(file);
 		
-		map.addAttribute("contract", contractBean.getContract());
-		if(null!=contractBean.getInvoiceList())					
-			map.addAttribute("invoiceList",contractBean.getInvoiceList());
+		map.addAttribute("contractBean", contractBean);
+		/*if(null!=contractBean.getInvoiceList())					
+			map.addAttribute("invoiceList",contractBean.getInvoiceList());*/
 		
 		return "importContractFile";
 	}

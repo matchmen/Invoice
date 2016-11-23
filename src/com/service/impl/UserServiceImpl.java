@@ -9,12 +9,14 @@ import com.bean.UserBean;
 import com.dao.AuthorityDao;
 import com.dao.CompanyDao;
 import com.dao.BaseInfoDao;
+import com.dao.SystemInfoDao;
 import com.dao.UserDao;
 import com.exception.BusinessException;
 import com.exception.ParameterException;
 import com.exception.SystemException;
 import com.model.Company;
 import com.model.BaseInfo;
+import com.model.SystemInfo;
 import com.model.User;
 import com.service.UserService;
 import com.util.StringUtils;
@@ -29,6 +31,8 @@ public class UserServiceImpl implements UserService {
 	private AuthorityDao authorityDao;	
 	@Autowired
 	private CompanyDao companyDao;
+	@Autowired
+	private SystemInfoDao systemInfoDao;
 	
 	@Override
 	public User login(String str,String password) throws SystemException {
@@ -236,7 +240,7 @@ public class UserServiceImpl implements UserService {
 		User delEmp =  userDao.findByStr(str);
 		//被删除者身份验证
 		if(null==delEmp){
-			throw new ParameterException("removeuser", "str", "邮箱或手机号不存在!", str, "str");
+			throw new ParameterException("removeUser", "str", "邮箱或手机号不存在!", str, "str");
 		}
 		//根据删除者id查询公司信息ID
 		Integer comIdByA = userDao.findComId(user.getId());
@@ -244,7 +248,7 @@ public class UserServiceImpl implements UserService {
 		Integer comIdByB = userDao.findComId(delEmp.getId());
 		//删除者和被删除者是否同一家公司验证
 		if(comIdByA!=comIdByB){
-			throw new ParameterException("removeuser", "str", "邮箱或手机号不存在!", str, "str");
+			throw new ParameterException("removeUser", "str", "邮箱或手机号不存在!", str, "str");
 		}
 		//解除与公司身份关系
 		userDao.removeBind(delEmp.getId());
@@ -305,16 +309,20 @@ public class UserServiceImpl implements UserService {
 		if(userBean.getUser().getIsCompany()){
 			userDao.addBind(comId, userId);
 		}
-		//初始化提示时间
-		baseInfo.setCueTimeFinance(7);
-		baseInfo.setCueTimeSales(7);
+		
 		
 		baseInfo.setCompanyId(comId);
 		baseInfo.setUserId(userId);
 		if(userBean.getUser().getIsCompany())
 			baseInfo.setUserId(0);
+		SystemInfo info = systemInfoDao.find();
+		if(null!=info){
 		//初始密码设为000000
-		baseInfo.setInitPassword("000000");
+		baseInfo.setInitPassword(info.getUserInitPW());
+		//初始化提示时间
+		baseInfo.setCueTimeFinance(info.getCueTimeOfFinance());
+		baseInfo.setCueTimeSales(info.getCueTimeOfSales());
+		}
 		//添加用户初始化信息
 		baseInfoDao.add(baseInfo);
 		

@@ -46,7 +46,7 @@ public class Invoice {
 	/**
 	 * 税率
 	 */
-	private BigDecimal rate;
+	private Double rate;
 	/**
 	 * 不含税金额
 	 */
@@ -140,12 +140,36 @@ public class Invoice {
 	 * 备注
 	 */
 	private String invRemark;
+	/**
+	 * 是否绑定合同
+	 */
+	private Boolean isContract;
+	/**
+	 * 是否绑定公司
+	 */
+	private Boolean isCompany;
 	
-	public BigDecimal getRate() {
+	public Boolean getIsCompany() {
+		return isCompany;
+	}
+
+	public void setIsCompany(Boolean isCompany) {
+		this.isCompany = isCompany;
+	}
+
+	public Boolean getIsContract() {
+		return isContract;
+	}
+
+	public void setIsContract(Boolean isContract) {
+		this.isContract = isContract;
+	}
+
+	public Double getRate() {
 		return rate;
 	}
 
-	public void setRate(BigDecimal rate) {
+	public void setRate(Double rate) {
 		this.rate = rate;
 	}
 

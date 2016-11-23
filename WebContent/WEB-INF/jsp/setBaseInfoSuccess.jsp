@@ -7,6 +7,6 @@
 <title>添加员工成功</title>
 </head>
 <body>
-设置成功！<a href="user.do?method=mainPage">回到主页</a>
+设置成功！
 </body>
 </html>

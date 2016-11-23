@@ -45,7 +45,6 @@ function errSetting(){
 		</tr>
 </table>
 <input type="submit" value="添加" >
-<input type="button" value="取消" onclick="window.open('user.do?method=mainPage','_self')">
 </form>
 </body>
 </html>

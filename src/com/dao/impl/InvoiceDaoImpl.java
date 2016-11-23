@@ -2,6 +2,7 @@ package com.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -18,6 +19,18 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 
 	@Override
 	public void add(Invoice invoice) {
+		
+		int isContract = 0;
+		
+		int isCompany = 0;
+		
+		if(null!=invoice.getIsContract()&&invoice.getIsContract()){
+			isContract = 1;
+		}
+		if(null!=invoice.getIsCompany()&&invoice.getIsCompany()){
+			isCompany = 1;
+		}
+		
 		StringBuffer sb = new StringBuffer("insert into t_invoice(")
 			.append("INVOICE_ID,")
 			.append("CONTRACT_ID,")
@@ -48,6 +61,8 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 			.append("ADDRESSEE_NAME,")
 			.append("ADRESS,")
 			.append("PHONE_NUMBER_OF_ADDRESSEE,")
+			.append("IS_CONTRACT,")
+			.append("IS_COMPANY,")
 			.append("EXPRESS_DATE,")
 			.append("INV_REMARK)")
 			.append(" values('")
@@ -117,7 +132,7 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 			.append("','")
 			.append(invoice.getInvoiceContent())
 			.append("','")
-			.append(invoice.getInvoiceType())
+			.append(Constants.parseToNum(invoice.getInvoiceType()))
 			.append("','")
 			.append(invoice.getCompanyNameOfPurchaser())
 			.append("','")
@@ -142,6 +157,10 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 			.append(invoice.getAddress())
 			.append("','")
 			.append(invoice.getPhoneNumber())
+			.append("','")
+			.append(isContract)
+			.append("','")
+			.append(isCompany)
 			.append("',");
 		if(null!=invoice.getExpressDate()
 				&&!StringUtils.isBlank(invoice.getExpressDate())
@@ -150,8 +169,9 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 			sb.append(invoice.getExpressDate());
 			sb.append("'");
 		}
-		else
+		else{
 			sb.append("null");
+		}
 			sb.append(",'")
 			.append(invoice.getInvRemark())
 			.append("')");
@@ -216,7 +236,7 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 				invoice.getNotReceiveAmt(),
 				invoice.getInvoiceStatus(),
 				invoice.getInvoiceContent(),
-				invoice.getInvoiceType(),
+				Constants.parseToNum(invoice.getInvoiceType()),
 				invoice.getCompanyNameOfPurchaser(),
 				invoice.getTpIdeNumOfPurchaser(),
 				invoice.getBankTypeOfPurchaser(),
@@ -236,11 +256,11 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 	}
 
 	@Override
-	public Invoice find(Integer id) {
+	public Invoice find(Integer id,Integer userId) {
 		
-		String sql ="select * from t_invoice where id = ?";
+		String sql ="select * from t_invoice t1,t_com_user_inv t2 where T1.ID = T2.INV_ID AND T2.USER_ID= ? AND T1.ID = ? AND T2.ABLED = 1 AND T1.ABLED=1 ";
 		
-		List<Invoice> invoiceList = getJdbcTempalte().query(sql, new Object[]{id}, new RowMapper<Invoice>(){
+		List<Invoice> invoiceList = getJdbcTempalte().query(sql, new Object[]{userId,id}, new RowMapper<Invoice>(){
 
 			@Override
 			public Invoice mapRow(ResultSet rs, int arg1) throws SQLException {
@@ -257,11 +277,11 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 				invoice.setAmtOfTax(rs.getBigDecimal("AMT_OF_TAX"));
 				invoice.setAmtOfNoTax(rs.getBigDecimal("AMT_OF_NO_TAX"));
 				invoice.setAmt(rs.getBigDecimal("AMT"));
-				invoice.setRate(rs.getBigDecimal("RATE"));
+				invoice.setRate(rs.getDouble("RATE"));
 				invoice.setReceiveAmt(rs.getBigDecimal("RECEIVE_AMT"));
 				invoice.setNotReceiveAmt(rs.getBigDecimal("NOT_RECEIVE_AMT"));
 				invoice.setInvoiceStatus(Constants.numParseStr(rs.getString("INVOICE_STATUS")));
-				invoice.setInvoiceType(rs.getString("INVOICE_TYPE"));
+				invoice.setInvoiceType(Constants.parseToStr(rs.getString("INVOICE_TYPE")));
 				invoice.setCompanyNameOfPurchaser(rs.getString("COMPANY_NAME_OF_PURCHASER"));
 				invoice.setTpIdeNumOfPurchaser(rs.getString("TP_I_DE_NUM_OF_PURCHASER"));
 				invoice.setBankTypeOfPurchaser(rs.getString("BANK_TYPE_OF_PURCHASER"));
@@ -277,6 +297,9 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 				invoice.setPhoneNumber(rs.getString("PHONE_NUMBER_OF_ADDRESSEE"));
 				invoice.setExpressDate(DateUtils.dateParseToString(rs.getDate("EXPRESS_DATE")));
 				invoice.setInvRemark(rs.getString("INV_REMARK"));
+				invoice.setInvoiceContent(rs.getString("INVOICE_CONTENT"));
+				invoice.setIsContract(rs.getBoolean("IS_CONTRACT"));
+				invoice.setIsCompany(rs.getBoolean("IS_COMPANY"));
 				return invoice;
 			}});
 		if(null!=invoiceList&&invoiceList.size()>0){
@@ -298,6 +321,7 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 				
 				Invoice invoice = new Invoice();
 				invoice.setInvId(rs.getInt("ID"));
+				invoice.setInvoiceContent(rs.getString("INVOICE_CONTENT"));
 				invoice.setInvoiceId(rs.getString("INVOICE_ID"));
 				invoice.setContractId(rs.getString("CONTRACT_ID"));
 				invoice.setInvoiceIndex(rs.getInt("INVOICE_INDEX"));
@@ -309,11 +333,11 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 				invoice.setAmtOfTax(rs.getBigDecimal("AMT_OF_TAX"));
 				invoice.setAmtOfNoTax(rs.getBigDecimal("AMT_OF_NO_TAX"));
 				invoice.setAmt(rs.getBigDecimal("AMT"));
-				invoice.setRate(rs.getBigDecimal("RATE"));
+				invoice.setRate(rs.getDouble("RATE"));
 				invoice.setReceiveAmt(rs.getBigDecimal("RECEIVE_AMT"));
 				invoice.setNotReceiveAmt(rs.getBigDecimal("NOT_RECEIVE_AMT"));
 				invoice.setInvoiceStatus(Constants.numParseStr(rs.getString("INVOICE_STATUS")));
-				invoice.setInvoiceType(rs.getString("INVOICE_TYPE"));
+				invoice.setInvoiceType(Constants.parseToStr(rs.getString("INVOICE_TYPE")));
 				invoice.setCompanyNameOfPurchaser(rs.getString("COMPANY_NAME_OF_PURCHASER"));
 				invoice.setTpIdeNumOfPurchaser(rs.getString("TP_I_DE_NUM_OF_PURCHASER"));
 				invoice.setBankTypeOfPurchaser(rs.getString("BANK_TYPE_OF_PURCHASER"));
@@ -329,6 +353,8 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 				invoice.setPhoneNumber(rs.getString("PHONE_NUMBER_OF_ADDRESSEE"));
 				invoice.setExpressDate(DateUtils.dateParseToString(rs.getDate("EXPRESS_DATE")));
 				invoice.setInvRemark(rs.getString("INV_REMARK"));
+				invoice.setIsContract(rs.getBoolean("IS_CONTRACT"));
+				invoice.setIsCompany(rs.getBoolean("IS_COMPANY"));
 				return invoice;
 			}});
 		if(null!=invoiceList&&invoiceList.size()>0){
@@ -361,11 +387,11 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 				invoice.setAmtOfTax(rs.getBigDecimal("AMT_OF_TAX"));
 				invoice.setAmtOfNoTax(rs.getBigDecimal("AMT_OF_NO_TAX"));
 				invoice.setAmt(rs.getBigDecimal("AMT"));
-				invoice.setRate(rs.getBigDecimal("RATE"));
+				invoice.setRate(rs.getDouble("RATE"));
 				invoice.setReceiveAmt(rs.getBigDecimal("RECEIVE_AMT"));
 				invoice.setNotReceiveAmt(rs.getBigDecimal("NOT_RECEIVE_AMT"));
 				invoice.setInvoiceStatus(Constants.numParseStr(rs.getString("INVOICE_STATUS")));
-				invoice.setInvoiceType(rs.getString("INVOICE_TYPE"));
+				invoice.setInvoiceType(Constants.parseToStr(rs.getString("INVOICE_TYPE")));
 				invoice.setCompanyNameOfPurchaser(rs.getString("COMPANY_NAME_OF_PURCHASER"));
 				invoice.setTpIdeNumOfPurchaser(rs.getString("TP_I_DE_NUM_OF_PURCHASER"));
 				invoice.setBankTypeOfPurchaser(rs.getString("BANK_TYPE_OF_PURCHASER"));
@@ -381,6 +407,9 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 				invoice.setPhoneNumber(rs.getString("PHONE_NUMBER_OF_ADDRESSEE"));
 				invoice.setExpressDate(DateUtils.dateParseToString(rs.getDate("EXPRESS_DATE")));
 				invoice.setInvRemark(rs.getString("INV_REMARK"));
+				invoice.setIsContract(rs.getBoolean("IS_CONTRACT"));
+				invoice.setIsCompany(rs.getBoolean("IS_COMPANY"));
+				invoice.setInvoiceContent(rs.getString("INVOICE_CONTENT"));
 				return invoice;
 			}});
 		if(null!=invoiceList&&invoiceList.size()>0){
@@ -391,11 +420,11 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 	}
 
 	@Override
-	public Invoice findByInvoiceId(String invoiceId) {
+	public Invoice findByInvoiceId(String invoiceId,Integer userId) {
 		
-		String sql ="select * from t_invoice where INVOICE_ID = ?";
+		String sql ="select * from t_invoice where INVOICE_ID = ? AND ABLED = 1 AND ID IN (SELECT INV_ID FROM T_COM_USER_INV WHERE USER_ID = ? AND ABLED =1)";
 		
-		List<Invoice> invoiceList = getJdbcTempalte().query(sql, new Object[]{invoiceId}, new RowMapper<Invoice>(){
+		List<Invoice> invoiceList = getJdbcTempalte().query(sql, new Object[]{invoiceId,userId}, new RowMapper<Invoice>(){
 
 			@Override
 			public Invoice mapRow(ResultSet rs, int arg1) throws SQLException {
@@ -413,11 +442,11 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 				invoice.setAmtOfTax(rs.getBigDecimal("AMT_OF_TAX"));
 				invoice.setAmtOfNoTax(rs.getBigDecimal("AMT_OF_NO_TAX"));
 				invoice.setAmt(rs.getBigDecimal("AMT"));
-				invoice.setRate(rs.getBigDecimal("RATE"));
+				invoice.setRate(rs.getDouble("RATE"));
 				invoice.setReceiveAmt(rs.getBigDecimal("RECEIVE_AMT"));
 				invoice.setNotReceiveAmt(rs.getBigDecimal("NOT_RECEIVE_AMT"));
 				invoice.setInvoiceStatus(Constants.numParseStr(rs.getString("INVOICE_STATUS")));
-				invoice.setInvoiceType(rs.getString("INVOICE_TYPE"));
+				invoice.setInvoiceType(Constants.parseToStr(rs.getString("INVOICE_TYPE")));
 				invoice.setCompanyNameOfPurchaser(rs.getString("COMPANY_NAME_OF_PURCHASER"));
 				invoice.setTpIdeNumOfPurchaser(rs.getString("TP_I_DE_NUM_OF_PURCHASER"));
 				invoice.setBankTypeOfPurchaser(rs.getString("BANK_TYPE_OF_PURCHASER"));
@@ -433,6 +462,9 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 				invoice.setPhoneNumber(rs.getString("PHONE_NUMBER_OF_ADDRESSEE"));
 				invoice.setExpressDate(DateUtils.dateParseToString(rs.getDate("EXPRESS_DATE")));
 				invoice.setInvRemark(rs.getString("INV_REMARK"));
+				invoice.setIsContract(rs.getBoolean("IS_CONTRACT"));
+				invoice.setIsCompany(rs.getBoolean("IS_COMPANY"));
+				invoice.setInvoiceContent(rs.getString("INVOICE_CONTENT"));
 				return invoice;
 			}});
 		if(null!=invoiceList&&invoiceList.size()>0){
@@ -462,11 +494,11 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 				invoice.setAmtOfTax(rs.getBigDecimal("AMT_OF_TAX"));
 				invoice.setAmtOfNoTax(rs.getBigDecimal("AMT_OF_NO_TAX"));
 				invoice.setAmt(rs.getBigDecimal("AMT"));
-				invoice.setRate(rs.getBigDecimal("RATE"));
+				invoice.setRate(rs.getDouble("RATE"));
 				invoice.setReceiveAmt(rs.getBigDecimal("RECEIVE_AMT"));
 				invoice.setNotReceiveAmt(rs.getBigDecimal("NOT_RECEIVE_AMT"));
 				invoice.setInvoiceStatus(Constants.numParseStr(rs.getString("INVOICE_STATUS")));
-				invoice.setInvoiceType(rs.getString("INVOICE_TYPE"));
+				invoice.setInvoiceType(Constants.parseToStr(rs.getString("INVOICE_TYPE")));
 				invoice.setCompanyNameOfPurchaser(rs.getString("COMPANY_NAME_OF_PURCHASER"));
 				invoice.setTpIdeNumOfPurchaser(rs.getString("TP_I_DE_NUM_OF_PURCHASER"));
 				invoice.setBankTypeOfPurchaser(rs.getString("BANK_TYPE_OF_PURCHASER"));
@@ -482,7 +514,164 @@ public class InvoiceDaoImpl extends DaoJdbcTemplate implements InvoiceDao {
 				invoice.setPhoneNumber(rs.getString("PHONE_NUMBER_OF_ADDRESSEE"));
 				invoice.setExpressDate(DateUtils.dateParseToString(rs.getDate("EXPRESS_DATE")));
 				invoice.setInvRemark(rs.getString("INV_REMARK"));
+				invoice.setIsCompany(rs.getBoolean("IS_COMPANY"));
+				invoice.setInvoiceContent(rs.getString("INVOICE_CONTENT"));
+				invoice.setIsCompany(rs.getBoolean("IS_CONTRACT"));
 				return invoice;
 			}});
+	}
+
+	@Override
+	public List<Invoice> findList(String firstName, String makeInvoceDateStart,
+			String makeInvoceDateEnd, String paymentDateStart,
+			String paymentDateEnd, String invStatus, Integer userId) {
+		//sql构建
+		StringBuffer sb = new StringBuffer("SELECT * FROM T_INVOICE WHERE ABLED = 1 AND ID IN (SELECT INV_ID FROM T_COM_USER_INV WHERE USER_ID = ? AND ABLED =1 )"); 
+		//参数构建
+		List<Object> params = new ArrayList<Object>();
+		params.add(userId);
+		if(!StringUtils.isSpace(firstName)){
+			sb.append("AND INVOICE_STATUS = ?");
+			params.add(invStatus);
+		}
+		//起始时间不为空，终止时间为空
+		if(!StringUtils.isSpace(makeInvoceDateStart)&&StringUtils.isSpace(makeInvoceDateEnd)){
+			sb.append("AND EXPECT_MAKE_INVOICE_DATE >= ?");
+			params.add(makeInvoceDateStart);
+		}
+		//起始时间为空，终止时间不为空
+		if(StringUtils.isSpace(makeInvoceDateStart)&&!StringUtils.isSpace(makeInvoceDateEnd)){
+			sb.append("AND EXPECT_MAKE_INVOICE_DATE <= ?");
+			params.add(makeInvoceDateEnd);
+		}
+		//起始时间不为空，终止时间不为空
+		if(!StringUtils.isSpace(makeInvoceDateStart)&&!StringUtils.isSpace(makeInvoceDateEnd)){
+			sb.append("AND EXPECT_MAKE_INVOICE_DATE BETWEEN ? AND ?");
+			params.add(makeInvoceDateStart);
+			params.add(makeInvoceDateEnd);
+		}
+		//起始时间不为空，终止时间为空
+		if(!StringUtils.isSpace(paymentDateStart)&&StringUtils.isSpace(paymentDateEnd)){
+			sb.append("AND EXPECT_MAKE_INVOICE_DATE >= ?");
+			params.add(paymentDateStart);
+		}
+		//起始时间为空，终止时间不为空
+		if(StringUtils.isSpace(paymentDateStart)&&!StringUtils.isSpace(paymentDateEnd)){
+			sb.append("AND EXPECT_MAKE_INVOICE_DATE <= ?");
+			params.add(paymentDateEnd);
+		}
+		//起始时间不为空，终止时间不为空
+		if(!StringUtils.isSpace(paymentDateStart)&&!StringUtils.isSpace(paymentDateEnd)){
+			sb.append("AND EXPECT_MAKE_INVOICE_DATE BETWEEN ? AND ?");
+			params.add(paymentDateStart);
+			params.add(paymentDateEnd);
+		}
+		if(!StringUtils.isSpace(invStatus)){
+			sb.append("AND INVOICE_STATUS = ? ");
+			params.add(invStatus);
+		}
+		
+		List<Invoice> invoiceList = getJdbcTempalte().query(sb.toString(), params.toArray(),new RowMapper<Invoice>(){
+			@Override
+			public Invoice mapRow(ResultSet rs, int arg1) throws SQLException {
+				
+				Invoice invoice = new Invoice();
+				invoice.setInvId(rs.getInt("ID"));
+				invoice.setInvoiceId(rs.getString("INVOICE_ID"));
+				invoice.setContractId(rs.getString("CONTRACT_ID"));
+				invoice.setInvoiceIndex(rs.getInt("INVOICE_INDEX"));
+				invoice.setExpectMakeInvoceDate(DateUtils.dateParseToString(rs.getDate("EXPECT_MAKE_INVOICE_DATE")));
+				invoice.setActualMakeInvoiceDate(DateUtils.dateParseToString(rs.getDate("ACTUAL_MAKE_INVOICE_DATE")));
+				invoice.setExpectPaymentDate(DateUtils.dateParseToString(rs.getDate("EXPECT_PAYMENT_DATE")));
+				invoice.setActualPaymentDate(DateUtils.dateParseToString(rs.getDate("ACTUAL_PAYMENT_DATE")));
+				invoice.setMakeInvoiceCompanyName(rs.getString("MAKE_INVOICE_COMPANY_NAME"));
+				invoice.setAmtOfTax(rs.getBigDecimal("AMT_OF_TAX"));
+				invoice.setAmtOfNoTax(rs.getBigDecimal("AMT_OF_NO_TAX"));
+				invoice.setAmt(rs.getBigDecimal("AMT"));
+				invoice.setRate(rs.getDouble("RATE"));
+				invoice.setReceiveAmt(rs.getBigDecimal("RECEIVE_AMT"));
+				invoice.setNotReceiveAmt(rs.getBigDecimal("NOT_RECEIVE_AMT"));
+				invoice.setInvoiceStatus(Constants.numParseStr(rs.getString("INVOICE_STATUS")));
+				invoice.setInvoiceType(Constants.parseToStr(rs.getString("INVOICE_TYPE")));
+				invoice.setCompanyNameOfPurchaser(rs.getString("COMPANY_NAME_OF_PURCHASER"));
+				invoice.setTpIdeNumOfPurchaser(rs.getString("TP_I_DE_NUM_OF_PURCHASER"));
+				invoice.setBankTypeOfPurchaser(rs.getString("BANK_TYPE_OF_PURCHASER"));
+				invoice.setBankNumberOfPurchaser(rs.getString("BANK_NUM_OF_PURCHASER"));
+				invoice.setCompanyNameOfSale(rs.getString("COMPANY_NAME_OF_SALE"));
+				invoice.setTpIdeNumOfSale(rs.getString("TP_I_DE_NUM_OF_SALE"));
+				invoice.setBankTypeOfPurchaser(rs.getString("BANK_TYPE_OF_PURCHASER"));
+				invoice.setBankNumberOfSale(rs.getString("BANK_NUM_OF_SALE"));
+				invoice.setBankTypeOfSale(rs.getString("BANK_TYPE_OF_SALE"));
+				invoice.setRemarkType(rs.getString("REMARK_TYPE"));
+				invoice.setAddresseeName(rs.getString("ADDRESSEE_NAME"));
+				invoice.setAddress(rs.getString("ADRESS"));
+				invoice.setPhoneNumber(rs.getString("PHONE_NUMBER_OF_ADDRESSEE"));
+				invoice.setExpressDate(DateUtils.dateParseToString(rs.getDate("EXPRESS_DATE")));
+				invoice.setInvRemark(rs.getString("INV_REMARK"));
+				invoice.setIsCompany(rs.getBoolean("IS_COMPANY"));
+				invoice.setInvoiceContent(rs.getString("INVOICE_CONTENT"));
+				invoice.setIsCompany(rs.getBoolean("IS_CONTRACT"));
+				return invoice;
+			}});
+		if(null!=invoiceList&&invoiceList.size()>0){
+			return invoiceList;
+		}
+		
+		return null;
+	}
+
+	@Override
+	public Invoice findByInvoiceId(String invoiceId) {
+		
+		String sql ="select * from t_invoice where INVOICE_ID = ? AND ABLED = 1 ";
+		
+		List<Invoice> invoiceList = getJdbcTempalte().query(sql, new Object[]{invoiceId}, new RowMapper<Invoice>(){
+
+			@Override
+			public Invoice mapRow(ResultSet rs, int arg1) throws SQLException {
+				
+				Invoice invoice = new Invoice();
+				invoice.setInvId(rs.getInt("ID"));
+				invoice.setInvoiceId(rs.getString("INVOICE_ID"));
+				invoice.setContractId(rs.getString("CONTRACT_ID"));
+				invoice.setInvoiceIndex(rs.getInt("INVOICE_INDEX"));
+				invoice.setExpectMakeInvoceDate(DateUtils.dateParseToString(rs.getDate("EXPECT_MAKE_INVOICE_DATE")));
+				invoice.setActualMakeInvoiceDate(DateUtils.dateParseToString(rs.getDate("ACTUAL_MAKE_INVOICE_DATE")));
+				invoice.setExpectPaymentDate(DateUtils.dateParseToString(rs.getDate("EXPECT_PAYMENT_DATE")));
+				invoice.setActualPaymentDate(DateUtils.dateParseToString(rs.getDate("ACTUAL_PAYMENT_DATE")));
+				invoice.setMakeInvoiceCompanyName(rs.getString("MAKE_INVOICE_COMPANY_NAME"));
+				invoice.setAmtOfTax(rs.getBigDecimal("AMT_OF_TAX"));
+				invoice.setAmtOfNoTax(rs.getBigDecimal("AMT_OF_NO_TAX"));
+				invoice.setAmt(rs.getBigDecimal("AMT"));
+				invoice.setRate(rs.getDouble("RATE"));
+				invoice.setReceiveAmt(rs.getBigDecimal("RECEIVE_AMT"));
+				invoice.setNotReceiveAmt(rs.getBigDecimal("NOT_RECEIVE_AMT"));
+				invoice.setInvoiceStatus(Constants.numParseStr(rs.getString("INVOICE_STATUS")));
+				invoice.setInvoiceType(Constants.parseToStr(rs.getString("INVOICE_TYPE")));
+				invoice.setCompanyNameOfPurchaser(rs.getString("COMPANY_NAME_OF_PURCHASER"));
+				invoice.setTpIdeNumOfPurchaser(rs.getString("TP_I_DE_NUM_OF_PURCHASER"));
+				invoice.setBankTypeOfPurchaser(rs.getString("BANK_TYPE_OF_PURCHASER"));
+				invoice.setBankNumberOfPurchaser(rs.getString("BANK_NUM_OF_PURCHASER"));
+				invoice.setCompanyNameOfSale(rs.getString("COMPANY_NAME_OF_SALE"));
+				invoice.setTpIdeNumOfSale(rs.getString("TP_I_DE_NUM_OF_SALE"));
+				invoice.setBankTypeOfPurchaser(rs.getString("BANK_TYPE_OF_PURCHASER"));
+				invoice.setBankNumberOfSale(rs.getString("BANK_NUM_OF_SALE"));
+				invoice.setBankTypeOfSale(rs.getString("BANK_TYPE_OF_SALE"));
+				invoice.setRemarkType(rs.getString("REMARK_TYPE"));
+				invoice.setAddresseeName(rs.getString("ADDRESSEE_NAME"));
+				invoice.setAddress(rs.getString("ADRESS"));
+				invoice.setPhoneNumber(rs.getString("PHONE_NUMBER_OF_ADDRESSEE"));
+				invoice.setExpressDate(DateUtils.dateParseToString(rs.getDate("EXPRESS_DATE")));
+				invoice.setInvRemark(rs.getString("INV_REMARK"));
+				invoice.setIsContract(rs.getBoolean("IS_CONTRACT"));
+				invoice.setInvoiceContent(rs.getString("INVOICE_CONTENT"));
+				invoice.setIsCompany(rs.getBoolean("IS_COMPANY"));
+				return invoice;
+			}});
+		if(null!=invoiceList&&invoiceList.size()>0){
+			return invoiceList.get(0);
+		}else{
+			return null;
+		}
 	}
 }

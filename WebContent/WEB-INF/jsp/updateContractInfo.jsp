@@ -11,7 +11,7 @@
 <script>
 function find(){
 	var formElement = document.getElementById('formId');
-	formElement.setAttribute('action','contract.do?method=findContractInfo'); 
+	formElement.setAttribute('action','contract.do?method=findUpdate'); 
 	formElement.submit(); 
 }
 </script>
@@ -20,10 +20,59 @@ function find(){
 <font style="color:red">${errorMsg}</font>
 <input  type="hidden"  id="errorMsg" value="${errorElementId}">
 <form id="formId" method="post" action="contract.do?method=updateContractInfo">
-合同编号<input type="text" name="contractIds" value="${contract.contractId}" id="contractId">
-<input type="button" value="搜索" onclick="find()">
-<c:if test="${!empty contract}">
-<input  type="hidden"  id="id" name="id" value="${contract.id}">
+	合同名称<input type="text" name="contractName" value="${contractName}">
+	客户名称<input type="text" name="firstName" value="${firstName}">
+	签订合同日期<input type="text" name="signDateStart" value="${signDateStart}">
+	-<input type="text" name="signDateEnd" value="${signDateEnd}">
+	<input type="button" value="搜索" onclick="find()">
+<c:if test="${!empty contractBean.contractList}">
+<table>
+	<tr>	
+		<td>合同编号</td>
+		<td>合同类型</td>
+		<td>产品和服务</td>
+		<td>甲方（客户）单位全称</td>
+		<td>甲方联系人</td>
+		<td>乙方（自己）单位全称</td>
+		<td>销售代表</td>
+		<td>丙方单位全称</td>
+		<td>丙方联系人</td>
+		<td>合同签订日期</td>
+		<td>合同生效日期</td>
+		<td>合同终止日期</td>
+		<td>合同金额</td>
+		<td>付款期数</td>
+		<td>已开发票</td>
+		<td>已开票金额</td>
+		<td>未开票金额</td>
+		<td>备注</td>
+	</tr>
+	<c:forEach items="${contractBean.contractList}" var="contract">
+		<tr>
+			<td><a href="contract.do?method=findConAndInvList2&contractIds=${contract.contractId}">${contract.contractId}</a></td>
+			<td><input readonly="readonly" value="${contract.contractType}"></td>
+			<td><input readonly="readonly" value="${contract.itemName}"></td>
+			<td><input readonly="readonly" value="${contract.companyNameOfFirst}"></td>
+			<td><input readonly="readonly" value="${contract.contactNameOfFirst}"></td>
+			<td><input readonly="readonly" value="${contract.companyNameOfSecond}"></td>
+			<td><input readonly="readonly" value="${contract.sales}"></td>
+			<td><input readonly="readonly" value="${contract.companyNameOfThird}"></td>
+			<td><input readonly="readonly" value="${contract.contactNameOfThird}"></td>
+			<td><input readonly="readonly" value="${contract.contractSignDate}"></td>
+			<td><input readonly="readonly" value="${contract.contractStartDate}"></td>
+			<td><input readonly="readonly" value="${contract.contractEndDate}"></td>
+			<td><input readonly="readonly" value="${contract.amt}"></td>
+			<td><input readonly="readonly" value="${contract.paymentTimes}"></td>
+			<td><input readonly="readonly" value="${contract.comleteInvoiceNumber}"></td>
+			<td><input readonly="readonly" value="${contract.completeInvoiceAmt}"></td>
+			<td><input readonly="readonly" value="${contract.remainInvoiceAmt}"></td>
+			<td><input readonly="readonly" value="${contract.remark}"></td>
+		</tr>
+	</c:forEach>
+</table>
+</c:if>		
+<c:if test="${!empty contractBean.contract}">
+<input  type="hidden"  id="id" name="id" value="${contractBean.contract.id}">
 <table>	
 	<tr>
 		<td>合同编号</td>
@@ -45,28 +94,28 @@ function find(){
 		<td>未开票金额</td>
 	</tr>
 	<tr>
-		<td><input type="text" name="contractId" value="${contract.contractId}" id="contractId"></td>
-   		<td><input type="text" name="contractType" value="${contract.contractType}" id="contractType"></td>
-		<td><input type="text" name="itemName" value="${contract.itemName}" id="itemName"></td>
-		<td><input type="text" name="companyNameOfFirst" value="${contract.companyNameOfFirst}" id="companyNameOfFirst"></td>
-		<td><input type="text" name="contactNameOfFirst" value="${contract.contactNameOfFirst}" id="contactNameOfFirst"></td>
-		<td><input type="text" name="companyNameOfSecond" value="${contract.companyNameOfSecond}" id="companyNameOfSecond"></td>
-   		<td><input type="text" name="contactNameOfSecond" value="${contract.sales}" id="contactNameOfSecond"></td>
-  		<td><input type="text" name="companyNameOfThird" value="${contract.companyNameOfThird}" id="companyNameOfThird"></td>
-		<td><input type="text" name="contactNameOfThird" value="${contract.contactNameOfThird}" id="contactNameOfThird"></td>
-  		<td><input type="text" name="contractSignDate" value="${contract.contractSignDate}" id="contractSignDate"></td>
- 		<td><input type="text" name="contractStartDate" value="${contract.contractStartDate}" id="contractStartDate"></td>
- 		<td><input type="text" name="contractEndDate" value="${contract.contractEndDate}" id="contractEndDate"></td>
-   		<td><input type="text" name="amt" value="${contract.amt}" id="amt"></td>
-   		<td><input type="text" name="paymentTimes" value="${contract.paymentTimes}" id="paymentTimes"></td>
-   		<td><input type="text" name="comleteInvoiceNumber" value="${contract.comleteInvoiceNumber}" id="comleteInvoiceNumber"></td>
-		<td><input type="text" name="completeInvoiceAmt" value="${contract.completeInvoiceAmt}" id="completeInvoiceAmt"></td>
-		<td><input type="text" name="remainInvoiceAmt" value="${contract.remainInvoiceAmt}" id="remainInvoiceAmt"></td>
-    	<td><input type="text" name="remark" value="${contract.remark}" id="remark"></td>
+		<td><input type="text" name="contractId" value="${contractBean.contract.contractId}" id="contractId"></td>
+   		<td><input type="text" name="contractType" value="${contractBean.contract.contractType}" id="contractType"></td>
+		<td><input type="text" name="itemName" value="${contractBean.contract.itemName}" id="itemName"></td>
+		<td><input type="text" name="companyNameOfFirst" value="${contractBean.contract.companyNameOfFirst}" id="companyNameOfFirst"></td>
+		<td><input type="text" name="contactNameOfFirst" value="${contractBean.contract.contactNameOfFirst}" id="contactNameOfFirst"></td>
+		<td><input type="text" name="companyNameOfSecond" value="${contractBean.contract.companyNameOfSecond}" id="companyNameOfSecond"></td>
+   		<td><input type="text" name="contactNameOfSecond" value="${contractBean.contract.sales}" id="contactNameOfSecond"></td>
+  		<td><input type="text" name="companyNameOfThird" value="${contractBean.contract.companyNameOfThird}" id="companyNameOfThird"></td>
+		<td><input type="text" name="contactNameOfThird" value="${contractBean.contract.contactNameOfThird}" id="contactNameOfThird"></td>
+  		<td><input type="text" name="contractSignDate" value="${contractBean.contract.contractSignDate}" id="contractSignDate"></td>
+ 		<td><input type="text" name="contractStartDate" value="${contractBean.contract.contractStartDate}" id="contractStartDate"></td>
+ 		<td><input type="text" name="contractEndDate" value="${contractBean.contract.contractEndDate}" id="contractEndDate"></td>
+   		<td><input type="text" name="amt" value="${contractBean.contract.amt}" id="amt"></td>
+   		<td><input type="text" name="paymentTimes" value="${contractBean.contract.paymentTimes}" id="paymentTimes"></td>
+   		<td><input type="text" name="comleteInvoiceNumber" value="${contractBean.contract.comleteInvoiceNumber}" id="comleteInvoiceNumber"></td>
+		<td><input type="text" name="completeInvoiceAmt" value="${contractBean.contract.completeInvoiceAmt}" id="completeInvoiceAmt"></td>
+		<td><input type="text" name="remainInvoiceAmt" value="${contractBean.contract.remainInvoiceAmt}" id="remainInvoiceAmt"></td>
+    	<td><input type="text" name="remark" value="${contractBean.contract.remark}" id="remark"></td>
 	</tr>
 </table>
 </c:if>
-<c:if test="${!empty invoiceList}">
+<c:if test="${!empty contractBean.invoiceList}">
 <br>
 <font>开票信息</font>
 <table>
@@ -100,7 +149,7 @@ function find(){
 		<td>收件人电话</td>
 		<td>寄送日期</td>
 	</tr>
-	<c:forEach items="${invoiceList}" var="item">
+	<c:forEach items="${contractBean.invoiceList}" var="item">
 	<tr>
 		<td><input type="text" name="invoiceList[${item.invoiceIndex-1}].invoiceIndex" id="invoiceIndex" value="${item.invoiceIndex}" ></td>
 		<td><input type="text" name="invoiceList[${item.invoiceIndex-1}].invoiceId" id="invoiceId" value="${item.invoiceId}" ></td>
@@ -146,14 +195,13 @@ function find(){
 	</tr>
 	</c:forEach>
 </table>
-<c:forEach items="${invoiceList}" var="item">
+<c:forEach items="${contractBean.invoiceList}" var="item">
 	<tr><td><input type="hidden" name="invoiceList[${item.invoiceIndex-1}].invId" id="invId" value="${item.invId}" ></td></tr>
 </c:forEach>
 </c:if>
-<c:if test="${!empty contract}">
+<c:if test="${!empty contractBean.contract}">
 <input type="submit" value="保存修改" >
 </c:if>
-<input type="button" value="取消" onclick="window.open('employee.do?method=mainPage','_self')"><br>
 </form>
 </body>
 </html>

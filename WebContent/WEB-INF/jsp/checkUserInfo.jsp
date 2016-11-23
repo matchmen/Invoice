@@ -31,6 +31,5 @@
 			</tr>
 		</c:if>
 </table>
-<input type="button" value="返回" onclick="window.open('user.do?method=mainPage','_self')">
 </body>
 </html>

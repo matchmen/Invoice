@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>添加成功</title>
+<title>成功</title>
 </head>
 <body>
-添加成功！<a href="employee.do?method=mainPage">回到主页</a>
+添加成功！
 </body>
 </html>

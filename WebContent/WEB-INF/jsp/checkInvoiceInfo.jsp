@@ -13,12 +13,31 @@
 <font style="color:red">${errorMsg}</font>
 <input  type="hidden"  id="errorMsg" value="${errorElementId}">
 <form action="invoice.do?method=checkInvoiceInfo" method="post">
-	发票编号<input type="text" name="invoiceId" value="${invoice.invoiceId}" id="invoiceId">
+	客户名称<input type="text" name="firstName" id="firstName" value="${firstName}">
+	开票日期<input type="text" placeholder="yyyy/mm/dd" name="makeInvoceDateStart" id="makeInvoceDateStart" value="${makeInvoceDateStart}">
+	-<input type="text" placeholder="yyyy/mm/dd" name="makeInvoceDateEnd" id="makeInvoceDateEnd" value="${makeInvoceDateEnd}">
+	收款日期<input type="text" placeholder="yyyy/mm/dd" name="paymentDateStart" id="paymentDateStart" value="${paymentDateStart}">
+	-<input type="text" placeholder="yyyy/mm/dd" name="paymentDateEnd" id="paymentDateEnd" value="${paymentDateEnd}">
+	发票状态<select name="invStatus" id="invStatus" >
+	    	<option value="01">已开具</option>
+			<option value="02">已检视</option>
+			<option value="03">已寄出</option>
+			<option value="04">已收到</option>
+			<option value="05">已入账</option>
+			<option value="06">已付款</option>
+			<option value="07">已确认开错</option>
+			<option value="08">已寄出(错)</option>
+			<option value="09">已收到(错)</option>
+			<option value="10">已作废</option>
+			<option value="11">已红冲</option>
+			<option value="12">已重开</option>
+	    </select>
 	<input type="submit" value="搜索">
 </form>
-<c:if test="${!empty invoice}">
+<c:if test="${!empty invoiceList}">
 <table>
 	<tr>
+		<td>操作</td>
 		<td>开票批次</td>
 		<td>合同编号</td>
 		<td>发票状态</td>
@@ -48,7 +67,9 @@
 		<td>收件人电话</td>
 		<td>寄送日期</td>
 	</tr>
+	<c:forEach items="${invoiceList}" var="invoice">
 	<tr>
+		<td><input type="button" onclick="window.open('invoice.do?method=view&id=${invoice.invId}')" value="预览" ></td>
 		<td><input disabled="disabled" value="${invoice.invoiceIndex}"></td>
 		<td><input disabled="disabled" value="${invoice.contractId}"></td>
 	    <td><input disabled="disabled" value="${invoice.invoiceStatus}"></td>
@@ -78,8 +99,8 @@
 		<td><input disabled="disabled" value="${invoice.phoneNumber}"></td>
 		<td><input disabled="disabled" value="${invoice.expressDate}"></td>
 	</tr>
+	</c:forEach>
 </table>
 </c:if>
-<input type="button" value="返回" onclick="window.open('employee.do?method=mainPage','_self')"><br>
 </body>
 </html>

@@ -35,7 +35,6 @@ import com.exception.BusinessException;
 import com.exception.ParameterException;
 import com.exception.SystemException;
 import com.model.Authority;
-import com.model.Company;
 import com.model.Contract;
 import com.model.User;
 import com.model.Invoice;
@@ -192,7 +191,7 @@ public class ContractServiceImpl implements ContractService{
 				invoice.setInvRemark(getStringVal(row.getCell(11)));
 				invoice.setRemarkType(getStringVal(row.getCell(12)));
 				if(!StringUtils.isEmpty(getStringVal(row.getCell(13))))
-					invoice.setRate(new BigDecimal(getStringVal(row.getCell(13))));
+					invoice.setRate(new Double(getStringVal(row.getCell(13))));
 				invoice.setInvoiceStatus(getStringVal(row.getCell(14)));
 				invoiceList.add(invoice);
 				
@@ -263,99 +262,160 @@ public class ContractServiceImpl implements ContractService{
 			return "";
 		}
 	}
-
-	private void validate(Contract contract) throws ParameterException{
+	/**
+	 * 发票信息验证
+	 * @param invoice
+	 */
+	private void validateInvoice(ContractBean contractBean,User user) throws ParameterException{
+		
+		List<Invoice> invoiceList = contractBean.getInvoiceList();
+		//发票编号、开票批次重复验证
+		for (Invoice invoice1 : invoiceList) {
+			//重复标记
+			int a = 0;
+			/*for (Invoice invoice2 : invoiceList) {
+				if(invoice1.getInvoiceId().equals(invoice2.getInvoiceId())){
+					a++;
+				}
+			}
+			//发票编号重复
+			if(a>1){
+				throw new ParameterException("importContractFile","contractId","发票编号重复",contractBean,"contractBean");
+			}*/
+			Invoice inv = invoiceDao.findByInvoiceId(invoice1.getInvoiceId(),user.getId());
+			//数据库是否存在验证
+			if(null!=inv){
+				throw new ParameterException("checkContractInfo","contractId","发票编号已经存在"+invoice1.getInvoiceId(),contractBean,"contractBean");
+			}
+			//标记置0
+			a=0;
+			//遍历list赋值标记
+			for (Invoice invoice2 : invoiceList) {
+				if(invoice1.getInvoiceIndex().equals(invoice2.getInvoiceIndex())){
+					a++;
+				}
+			}
+			//发票批次重复验证
+			if(a>1){
+				throw new ParameterException("importContractFile","invoiceIndex","发票批次重复",contractBean,"contractBean");
+			}
+		}
+	}
+	/**
+	 * 合同信息验证
+	 * @param contract
+	 * @throws ParameterException
+	 */
+	private void validateContract(ContractBean contractBean,User user) throws ParameterException{
+		
+		Contract contract = contractBean.getContract();
 		//合同编号验证
 		if(null==contract.getContractId()||
 				StringUtils.isBlank(contract.getContractId())||
 				StringUtils.isEmpty(contract.getContractId())){
-			throw new ParameterException("importContractFile","contractId","合同编号不能为空",contract,"contract");
+			throw new ParameterException("importContractFile","contractId","合同编号不能为空",contractBean,"contractBean");
 		}
-		Contract ct = contractDao.findByContractId(contract.getContractId());
+		Contract ct = contractDao.findByContractId(contract.getContractId(),user.getId());
 		if(null!=ct){
-			throw new ParameterException("importContractFile","contractId","合同编号已经存在",contract,"contract");
+			throw new ParameterException("importContractFile","contractId","合同编号已经存在",contractBean,"contractBean");
 		}
 		
 		//合同类型验证
 		if(null==contract.getContractType()||
 				StringUtils.isBlank(contract.getContractType())||
 				StringUtils.isEmpty(contract.getContractType())){
-			throw new ParameterException("importContractFile","contractType","合同类型不能为空",contract,"contract");
+			throw new ParameterException("importContractFile","contractType","合同类型不能为空",contractBean,"contractBean");
 		}
 		
 		//甲方（客户）单位全称	
 		if(null==contract.getContractType()||
 				StringUtils.isBlank(contract.getContractType())||
 				StringUtils.isEmpty(contract.getContractType())){
-			throw new ParameterException("importContractFile","companyNameOfFirst","甲方（客户）单位不能为空",contract,"contract");
+			throw new ParameterException("importContractFile","companyNameOfFirst","甲方（客户）单位不能为空",contractBean,"contractBean");
 		}
 		
 		//甲方联系人	
 		if(null==contract.getContactNameOfFirst()||
 				StringUtils.isBlank(contract.getContactNameOfFirst())||
 				StringUtils.isEmpty(contract.getContactNameOfFirst())){
-			throw new ParameterException("importContractFile","contactNameOfFirst","甲方联系人不能为空",contract,"contract");
+			throw new ParameterException("importContractFile","contactNameOfFirst","甲方联系人不能为空",contractBean,"contractBean");
 		}
 		
 		//乙方（自己）单位全称
 		if(null==contract.getCompanyNameOfSecond()||
 				StringUtils.isBlank(contract.getCompanyNameOfSecond())||
 				StringUtils.isEmpty(contract.getCompanyNameOfSecond())){
-			throw new ParameterException("importContractFile","companyNameOfSecond","乙方（自己）单位全称不能为空",contract,"contract");
+			throw new ParameterException("importContractFile","companyNameOfSecond","乙方（自己）单位全称不能为空",contractBean,"contractBean");
 		}
 		
 		//销售代表
 		if(null==contract.getContactNameOfFirst()||
 				StringUtils.isBlank(contract.getContactNameOfFirst())||
 				StringUtils.isEmpty(contract.getContactNameOfFirst())){
-			throw new ParameterException("importContractFile","contactNameOfSecond","销售代表不能为空",contract,"contract");
+			throw new ParameterException("importContractFile","contactNameOfSecond","销售代表不能为空",contractBean,"contractBean");
 		}
 		//合同签订日期
 		if(null==contract.getContractSignDate()||
 				StringUtils.isBlank(contract.getContractSignDate())||
 				StringUtils.isEmpty(contract.getContractSignDate())){
-			throw new ParameterException("importContractFile","contractSignDate","合同签订日期不能为空",contract,"contract");
+			throw new ParameterException("importContractFile","contractSignDate","合同签订日期不能为空",contractBean,"contractBean");
 		}
 	}
 	
 	@Override
-	public void preserveContract(ContractBean contractBean,Integer empId) throws ParameterException, SystemException {
+	public void preserveContract(ContractBean contractBean,User user) throws ParameterException, SystemException {
 		
 		if(null!=contractBean){
 			if (null != contractBean.getContract()) {
-				// 数据验证
-				validate(contractBean.getContract());
-
-				User emp = userDao.find(empId);
-
-				if (null != emp) {
-					Company com = companyDao.find(emp.getCompanyCode());
-					if (null != com) {
-						Authority authority = new Authority();
-						authority.setComId(com.getId());
-						authority.setEmpId(empId);
-						contractDao.add(contractBean.getContract());
-						Contract con = contractDao.findByContractId(contractBean.getContract().getContractId());
-						authority.setConId(con.getId());
-						// 权限绑定
-						authorityDao.addCon(authority);
-						//判断是否有开票信息
-						if(null!=contractBean.getInvoiceList()){
-							for (Invoice invoice : contractBean.getInvoiceList()) {
-								invoice.setContractId(contractBean.getContract().getContractId());
-								invoice.setInvoiceStatus(Constants.strParseNum(invoice.getInvoiceStatus()));
-								if(null!=invoice.getInvoiceId()
-										&&!StringUtils.isBlank(invoice.getInvoiceId())
-										&&!StringUtils.isEmpty(invoice.getInvoiceId())){
-									throw new ParameterException("checkContractInfo","contractId","发票编号已经存在",contractBean,"contractBean");
-								}
-								invoiceDao.add(invoice);
-								Invoice inv = invoiceDao.findByConIDAndIndex(invoice.getContractId(), invoice.getInvoiceIndex());
-								if(null!=inv){
-									authority.setInvId(inv.getInvId());
-									authorityDao.addInv(authority);
-								}
-							}
+				// 合同数据验证
+				validateContract(contractBean,user);
+				//发票数验证
+				if(null!=contractBean.getInvoiceList()&&contractBean.getInvoiceList().size()>0)
+					validateInvoice(contractBean,user);
+				Integer comId = 0;
+				//公司ID查询
+				if(user.getIsCompany()){
+					comId = userDao.findComId(user.getId());
+				}
+				//权限信息构建
+				Authority authority = new Authority();
+				
+				authority.setComId(comId);
+				//与用户绑定
+				authority.setEmpId(user.getId());
+				//添加到数据库
+				contractDao.add(contractBean.getContract());
+				//查询插入的合同信息
+				Contract con = contractDao.findByContractId(contractBean.getContract().getContractId());
+				//设置合同ID
+				authority.setConId(con.getId());
+				// 权限绑定
+				authorityDao.addCon(authority);
+				//判断是否有开票信息
+				if(null!=contractBean.getInvoiceList()){
+					//遍历list
+					for (Invoice invoice : contractBean.getInvoiceList()) {
+						//设置合同编号
+						invoice.setContractId(contractBean.getContract().getContractId());
+						//发票状态描述转换
+						invoice.setInvoiceStatus(Constants.strParseNum(invoice.getInvoiceStatus()));
+						//绑定
+						invoice.setIsContract(true);
+						//绑定公司
+						if(user.getIsCompany()){
+							invoice.setIsCompany(true);
+						}else{
+							invoice.setIsCompany(false);
+						}
+						//添加数据库
+						invoiceDao.add(invoice);
+						//查询插入数据
+						Invoice inv = invoiceDao.findByConIDAndIndex(invoice.getContractId(), invoice.getInvoiceIndex());
+						if(null!=inv){
+							//设置发票ID
+							authority.setInvId(inv.getInvId());
+							//发票信息权限绑定
+							authorityDao.addInv(authority);
 						}
 					}
 				}
@@ -369,16 +429,8 @@ public class ContractServiceImpl implements ContractService{
 		if(null==contractId||StringUtils.isBlank(contractId)||StringUtils.isEmpty(contractId)){
 			throw new ParameterException("checkContractInfo","contractId","请输入需要查询的合同编号",contractId,"contractId");
 		}
-		
-		Contract con = contractDao.findByContractId(contractId);
-		
-		User emp = userDao.find(empId);
-		
-		Company com = companyDao.find(emp.getCompanyCode());
-		//为null判断，几个对象中只要有一个为空则返回null
-		if(null==con||emp==null||com==null){
-			return null;
-		}
+		//合同信息查询
+		Contract con = contractDao.findByContractId(contractId,empId);
 		
 		List<Invoice> invoiceList = invoiceDao.findByContractId(contractId);
 		//定义返回对象
@@ -388,11 +440,6 @@ public class ContractServiceImpl implements ContractService{
 		if(null!=invoiceList){
 			bean.setInvoiceList(invoiceList);
 		}
-		
-		if(!authValidate(con.getId(),com.getId(),emp.getId())){
-			return null;
-		}
-		
 		return  bean;
 	}
 
@@ -403,22 +450,22 @@ public class ContractServiceImpl implements ContractService{
 			
 			if(null!=contractBean.getContract()){
 				
-				Contract contract = contractBean.getContract();
+				//Contract contract = contractBean.getContract();
+				//数据验证
+				validate2(contractBean,empId);
 				
-				validate2(contract);
-				
-				Contract con = contractDao.findByContractId(contract.getContractId());
+				/*Contract con = contractDao.findByContractId(contract.getContractId(),empId);
 				
 				User emp = userDao.find(empId);
 				
 				Company com = companyDao.find(emp.getCompanyCode());
 				
 				if(null==con||emp==null||com==null){
-					throw new BusinessException("", "没有修改权限", null, null);
+					throw new BusinessException("error", "没有修改权限", null, null);
 				}else if(!authValidate(con.getId(),com.getId(),emp.getId())){
-					throw new BusinessException("", "没有修改权限", null, null);
-				}
-				contractDao.update(contract);
+					throw new BusinessException("error", "没有修改权限", null, null);
+				}*/
+				//
 			}
 			
 			if(null!=contractBean.getInvoiceList()){
@@ -434,35 +481,42 @@ public class ContractServiceImpl implements ContractService{
 					}
 				}
 				for (Invoice invoice : contractBean.getInvoiceList()) {
-					invoice.setContractId(contractBean.getContract().getContractId());
-					invoice.setInvoiceStatus(Constants.strParseNum(invoice.getInvoiceStatus()));
 					//数据库中发票编号存在验证
-					Invoice oldInv = invoiceDao.find(invoice.getInvId());
+					Invoice oldInv = invoiceDao.find(invoice.getInvId(),empId);
 					if(null!=oldInv){
 						if(!oldInv.getInvoiceId().equals(invoice.getInvoiceId())){
-							if(null!=invoiceDao.findByInvoiceId(invoice.getInvoiceId()))
+							if(null!=invoiceDao.findByInvoiceId(invoice.getInvoiceId(),empId))
 								throw new ParameterException("importContractFile","","第"+invoice.getInvoiceIndex()+"次开票的开票信息的合同编号已经存在",contractBean,"contractBean");
 						}
 					}
+				}
+			}
+			contractDao.update(contractBean.getContract());
+			if(null!=contractBean.getInvoiceList()){
+				for (Invoice invoice : contractBean.getInvoiceList()) {
+					invoice.setContractId(contractBean.getContract().getContractId());
+					invoice.setInvoiceStatus(Constants.strParseNum(invoice.getInvoiceStatus()));
 					invoiceDao.update(invoice);
 				}
 			}
 		}
 	}
 	
-	private void validate2(Contract contract) throws ParameterException{
+	private void validate2(ContractBean contractBean,Integer userId) throws ParameterException{
+		
+		Contract contract = contractBean.getContract();
 		//合同编号验证
 		if(null==contract.getContractId()||
 				StringUtils.isBlank(contract.getContractId())||
 				StringUtils.isEmpty(contract.getContractId())){
-			throw new ParameterException("updateContractInfo","contractId","合同编号不能为空",contract,"contract");
+			throw new ParameterException("updateContractInfo","contractId","合同编号不能为空",contractBean,"contractBean");
 		}
 		Contract oldcontract = contractDao.find(contract.getId());
 		if(null!=oldcontract){
 			if(!oldcontract.getContractId().equals(contract.getContractId())){
-				Contract ct = contractDao.findByContractId(contract.getContractId());
+				Contract ct = contractDao.findByContractId(contract.getContractId(),userId);
 				if(null!=ct){
-					throw new ParameterException("updateContractInfo","contractId","合同编号已经存在",contract,"contract");
+					throw new ParameterException("updateContractInfo","contractId","合同编号已经存在",contractBean,"contractBean");
 				}
 			}
 		}
@@ -470,45 +524,45 @@ public class ContractServiceImpl implements ContractService{
 		if(null==contract.getContractType()||
 				StringUtils.isBlank(contract.getContractType())||
 				StringUtils.isEmpty(contract.getContractType())){
-			throw new ParameterException("updateContractInfo","contractType","合同类型不能为空",contract,"contract");
+			throw new ParameterException("updateContractInfo","contractType","合同类型不能为空",contractBean,"contractBean");
 		}
 		
 		//甲方（客户）单位全称	
 		if(null==contract.getContractType()||
 				StringUtils.isBlank(contract.getContractType())||
 				StringUtils.isEmpty(contract.getContractType())){
-			throw new ParameterException("updateContractInfo","companyNameOfFirst","甲方（客户）单位不能为空",contract,"contract");
+			throw new ParameterException("updateContractInfo","companyNameOfFirst","甲方（客户）单位不能为空",contractBean,"contractBean");
 		}
 		
 		//甲方联系人	
 		if(null==contract.getContactNameOfFirst()||
 				StringUtils.isBlank(contract.getContactNameOfFirst())||
 				StringUtils.isEmpty(contract.getContactNameOfFirst())){
-			throw new ParameterException("updateContractInfo","contactNameOfFirst","甲方联系人不能为空",contract,"contract");
+			throw new ParameterException("updateContractInfo","contactNameOfFirst","甲方联系人不能为空",contractBean,"contractBean");
 		}
 		
 		//乙方（自己）单位全称
 		if(null==contract.getCompanyNameOfSecond()||
 				StringUtils.isBlank(contract.getCompanyNameOfSecond())||
 				StringUtils.isEmpty(contract.getCompanyNameOfSecond())){
-			throw new ParameterException("updateContractInfo","companyNameOfSecond","乙方（自己）单位全称不能为空",contract,"contract");
+			throw new ParameterException("updateContractInfo","companyNameOfSecond","乙方（自己）单位全称不能为空",contractBean,"contractBean");
 		}
 		
 		//销售代表
 		if(null==contract.getContactNameOfFirst()||
 				StringUtils.isBlank(contract.getContactNameOfFirst())||
 				StringUtils.isEmpty(contract.getContactNameOfFirst())){
-			throw new ParameterException("updateContractInfo","contactNameOfSecond","销售代表不能为空",contract,"contract");
+			throw new ParameterException("updateContractInfo","contactNameOfSecond","销售代表不能为空",contractBean,"contractBean");
 		}
 		//合同签订日期
 		if(null==contract.getContractSignDate()||
 				StringUtils.isBlank(contract.getContractSignDate())||
 				StringUtils.isEmpty(contract.getContractSignDate())){
-			throw new ParameterException("importContractFile","contractSignDate","合同签订日期不能为空",contract,"contract");
+			throw new ParameterException("importContractFile","contractSignDate","合同签订日期不能为空",contractBean,"contractBean");
 		}
 	}
 
-	private boolean authValidate(Integer conId, Integer comId, Integer empId){
+	/*private boolean authValidate(Integer conId, Integer comId, Integer empId){
 				
 		Authority authority = new Authority();
 		
@@ -521,13 +575,13 @@ public class ContractServiceImpl implements ContractService{
 			return false;
 		}
 		return true;
-	}
+	}*/
 	@Override
-	public void addContractInfoManage(Admin admin) throws ParameterException {
+	public void addContractInfoManage(Admin admin,User user) throws ParameterException {
 		if(null!=admin){
-			Company company = null;
 			Authority auth = new Authority();
 			Contract contract = null;
+			Integer comId = 0;
 			User addEmp = null;
 			//合同编号为空验证
 			if(null==admin.getContractId()
@@ -535,23 +589,23 @@ public class ContractServiceImpl implements ContractService{
 					||StringUtils.isEmpty(admin.getContractId())){
 				throw new ParameterException("addContractInfoManage","contractId","合同编号不能为空!",admin,"admin");
 			}else{
-				contract = contractDao.findByContractId(admin.getContractId());
+				contract = contractDao.findByContractId(admin.getContractId(),user.getId());
 				if(null==contract){
 					throw new ParameterException("addContractInfoManage","contractId","合同编号不存在!",admin,"admin");
 				}
 			}
 			//添加人员身份验证
 			if(null!=admin.getUser()){
-				company = companyDao.find(admin.getUser().getCompanyCode());
+				comId = userDao.findComId(user.getId());
 				//判断是否有权限
-				if(null==company){
-					throw new ParameterException("addContractInfoManage","","您没有此合同管理权限!",admin,"admin");
+				if(null==comId){
+					throw new ParameterException("addContractInfoManage","","合同编号不存在!",admin,"admin");
 				}
-				auth.setComId(company.getId());
+				auth.setComId(comId);
 				auth.setConId(contract.getId());
 				auth.setEmpId(admin.getUser().getId());
 				if(null==authorityDao.findCon(auth)){
-					throw new ParameterException("addContractInfoManage","","您没有此合同管理权限!",admin,"admin");
+					throw new ParameterException("addContractInfoManage","","合同编号不存在!",admin,"admin");
 				}
 			}else{
 				throw new ParameterException("addContractInfoManage","","身份验证已过期，请重新登录!",null,"");
@@ -563,11 +617,15 @@ public class ContractServiceImpl implements ContractService{
 				List<User> empList = userDao.findList(admin.getStr());
 				//判断该手机号的用户是否在对应公司下
 				if(null==empList
-						||null==empList.get(0)
-						||!admin.getUser().getCompanyCode().equals(empList.get(0).getCompanyCode())){
+						||null==empList.get(0)){
 					throw new ParameterException("addContractInfoManage","str","邮箱或手机号不存在",admin,"admin");
 				}
 				addEmp=empList.get(0);
+				Integer comId2 = userDao.findComId(addEmp.getId());
+				
+				if(comId2!=comId){
+					throw new ParameterException("addContractInfoManage","str","邮箱或手机号不存在",admin,"admin");
+				}
 			}else{
 				throw new ParameterException("addContractInfoManage","str","邮箱或手机号不能为空",admin,"admin");
 			}
@@ -595,4 +653,17 @@ public class ContractServiceImpl implements ContractService{
 	public void addInvoiceInfoManage(Admin admin) throws ParameterException {
 		
 	}
+	
+	public ContractBean findContractList(String contractName,String firstName,String signDateStart,String signDateEnd,User user) throws ParameterException{
+		
+		ContractBean bean = new ContractBean();
+		//数据检索
+		List<Contract> conList = contractDao.findList(contractName, firstName, signDateStart, signDateEnd, user.getId());
+		
+		if(null!=conList&&conList.size()>0){
+			bean.setContractList(conList);
+		}
+		return bean;
+	}
+	
 }

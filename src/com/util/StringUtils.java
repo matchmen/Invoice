@@ -70,4 +70,15 @@ public class StringUtils {
 			throw new SystemException("errorPage","用户口令加密异常");
 		}
 	}
+	
+	/**
+	 * 空串，null，空判断
+	 */
+	public static Boolean isSpace(String str){
+		if(null==str||isBlank(str)||isEmpty(str)){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }

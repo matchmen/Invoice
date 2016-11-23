@@ -8,6 +8,12 @@
 <link href="WebContent/css/invoice.css" rel="stylesheet" type="text/css" >
 <script type="text/javascript" src="WebContent/js/invoice.js"></script>
 <title>注 册</title>
+<style type="text/css">
+body {
+	background:#D2E0F2;
+}
+
+</style>
 </head>
 <body onload="errSetting()">
 	<font style="color:red">${errorMsg}</font>
@@ -60,8 +66,7 @@
 			</tr>
 		</c:if>		
 		</table>
-		<input type="submit" value="注册公司" >
-		<input type="button" value="取消" onclick="window.open('user.do?method=loginPage','_self')">
+		<input type="submit" value="注册" >
 	</form>
 </body>
 </html>

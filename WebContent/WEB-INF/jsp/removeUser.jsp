@@ -18,7 +18,6 @@
 	</tr>
 </table>
 <input type="submit" value="注销" >
-<input type="button" value="取消" onclick="window.open('user.do?method=mainPage','_self')"><br>
 </form>
 </body>
 </html>

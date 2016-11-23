@@ -253,7 +253,7 @@ public class UserDaoImpl extends DaoJdbcTemplate implements UserDao {
 	@Override
 	public void leaveCompany(Integer userId) {
 		
-		String sql = "update T_USER set IS_COMPANY = 0 WHERE USER_ID = ?";
+		String sql = "update T_USER set IS_COMPANY = 0 WHERE ID = ?";
 		
 		getJdbcTempalte().update(sql, new Object[]{userId});
 		
